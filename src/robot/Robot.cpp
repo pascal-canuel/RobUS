@@ -31,19 +31,19 @@ void Robot::rotate(float degree,float Motor_ID)
      if(Motor_ID==LEFT_MOTOR)
      {
          ENCODER_ReadReset(LEFT_MOTOR);
-        do
+         while (ENCODER_Read(LEFT_MOTOR)<NB_PIN_FOR_TURN);
         {
             MOTOR_SetSpeed(LEFT_MOTOR,0.20);
-        }while (ENCODER_Read(LEFT_MOTOR)<NB_PIN_FOR_TURN);
+        }
         MOTOR_SetSpeed(LEFT_MOTOR,0);
      }
      if(Motor_ID==RIGHT_MOTOR)
      {
          ENCODER_ReadReset(RIGHT_MOTOR);
-         do
+          while (ENCODER_Read(RIGHT_MOTOR)<NB_PIN_FOR_TURN);
          {
             MOTOR_SetSpeed(RIGHT_MOTOR,0.2);
-         } while (ENCODER_Read(RIGHT_MOTOR)<NB_PIN_FOR_TURN);
+         }
          MOTOR_SetSpeed(RIGHT_MOTOR,0);
      }
      
