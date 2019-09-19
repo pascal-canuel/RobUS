@@ -19,4 +19,5 @@ void loop() {
   delay(500);
   Robus->setSpeed(BOTH_MOTOR, -0.2);
   delay(500);
+  //allo pascal
 }
