@@ -3,6 +3,7 @@ Projet: Les 100ID
 Equipe: P-13
 Auteurs: 
   - Pascal Canuel (canp2403)
+  - Adam Béliveau (bela1003)
 Description: Breve description du script
 */
 
@@ -12,12 +13,17 @@ Robot* Robus;
 
 void setup(){
   Robus = new Robot();
+  
 }
 
 void loop() {
-  Robus->setSpeed(LEFT_MOTOR, 0.2);
-  delay(500);
-  Robus->setSpeed(BOTH_MOTOR, -0.2);
-  delay(500);
-  //allo pascal
+ 
+if(ROBUS_IsBumper(2)==true)
+  {
+    Robus->rotate(180,RIGHT_MOTOR);
+  }
+  if(ROBUS_IsBumper(3)==true)
+  {
+    Robus->rotate(180,LEFT_MOTOR);
+  }
 }
