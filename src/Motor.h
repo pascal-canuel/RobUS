@@ -11,6 +11,7 @@ enum MotorId {
 struct Motor
 {
     MotorId _motorId;
+    float _currentSpeed;
 
     Motor() {}
     Motor(MotorId motorId) {
@@ -32,7 +33,12 @@ struct Motor
     }
 
     void setSpeed(float speed) {
-        MOTOR_SetSpeed(_motorId, speed);
+        _currentSpeed = speed;
+        MOTOR_SetSpeed(_motorId, _currentSpeed);
+    }
+
+    void addSpeed(float speed) {
+        setSpeed(_currentSpeed + speed);
     }
 
     void stop() {

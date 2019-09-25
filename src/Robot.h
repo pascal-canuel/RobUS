@@ -2,12 +2,14 @@
 #define Robot_H_
 
 #include "Robot.Utils.h"
+#include "PID.h"
 #include "Motor.h"
 
 struct Robot
 {
     Motor _leftMotor;
     Motor _rightMotor;
+    PID _pidMotor;
 
     Robot() {
         BoardInit();
@@ -36,7 +38,17 @@ struct Robot
 
         _leftMotor.setSpeed(DEFAULT_SPEED);
         _rightMotor.setSpeed(DEFAULT_SPEED);
-        while (_leftMotor.readEncoder() < pulseToReach && _rightMotor.readEncoder() < pulseToReach) {}
+
+        int32_t leftPulse;
+        int32_t rightPulse;
+        do
+        {
+            leftPulse = _leftMotor.readEncoder();
+            rightPulse = _rightMotor.readEncoder();
+
+            float magic = _pidMotor.Compute(leftPulse, rightPulse);
+            _rightMotor.addSpeed(magic);
+        } while (leftPulse < pulseToReach && rightPulse < pulseToReach);
         
         _leftMotor.stop();
         _rightMotor.stop();
