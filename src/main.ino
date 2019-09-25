@@ -1,28 +1,30 @@
 /*
-Projet: Le nom du script
-Equipe: Votre numero d'equipe
-Auteurs: Les membres auteurs du script
+Projet: Les 100ID
+Equipe: P-13
+Auteurs: 
+- Pascal Canuel
+- Adam Beliveau
+- Eloise Marchal
+- Marie-Eve Castonguay
+- Raphael Auclair
+- William Gravel
+- Xavier Champagne
 Description: Breve description du script
-Date: Derniere date de modification
 */
 
 #include "Robot.h"
 
-Robot robus = Robot();
+Robot robus;
 
 void setup(){
-  BoardInit();
+    robus = Robot();
 
-  ENCODER_Reset(0);
-  ENCODER_Reset(1);
-
-  delay(2000);
-  robus.move(50);
-  robus.rotate(-90);
-  robus.move(50);
-  robus.rotate(-90);
-  robus.move(25);
-  robus.rotate(-90);
+    robus.move(50);
+    robus.rotate(-90);
+    robus.move(25);
+    robus.rotate(-45);
+    robus.move(25);
+    robus.rotate(-45);
 }
 
 void loop() {
