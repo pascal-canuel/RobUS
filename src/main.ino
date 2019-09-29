@@ -6,48 +6,27 @@ Description: Breve description du script
 Date: Derniere date de modification
 */
 
-/* ****************************************************************************
-Inclure les librairies de functions que vous voulez utiliser
-**************************************************************************** */
+#include "Robot.h"
 
-#include <LibRobus.h> // Essentielle pour utiliser RobUS
-
-
-
-/* ****************************************************************************
-Variables globales et defines
-**************************************************************************** */
-// -> defines...
-// L'ensemble des fonctions y ont acces
-
-
-
-/* ****************************************************************************
-Vos propres fonctions sont creees ici
-**************************************************************************** */
-void maFonction(){
-  // code
-}
-
-
-/* ****************************************************************************
-Fonctions d'initialisation (setup)
-**************************************************************************** */
-// -> Se fait appeler au debut du programme
-// -> Se fait appeler seulement un fois
-// -> Generalement on y initilise les varibbles globales
+Robot robus;
 
 void setup(){
   BoardInit();
+
+  robus = Robot();
+  robus.reset();
+
+  robus.move(95);
+  robus.rotate(45);
+  robus.move(50);
+  robus.rotate(-90);
+  robus.move(170);
+  robus.rotate(45);
+  robus.move(80);
+  robus.rotate(90);
+  robus.move(100);
+  robus.rotate(-90);
+  robus.move(90);
 }
 
-
-/* ****************************************************************************
-Fonctions de boucle infini (loop())
-**************************************************************************** */
-// -> Se fait appeler perpetuellement suite au "setup"
-
-void loop() {
-  // SOFT_TIMER_Update(); // A decommenter pour utiliser des compteurs logiciels
-  delay(10);// Delais pour décharger le CPU
-}
+void loop() {}
