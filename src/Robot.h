@@ -19,7 +19,7 @@ struct Robot
 
     void rotate(float degree) {
         Motor motor = _leftMotor;
-        if(degree > 0) 
+        if (degree > 0) 
             motor = _rightMotor;
 
         float distanceToReach = convertDegreeToDistance(degree);
@@ -34,7 +34,7 @@ struct Robot
     void move(float distance) {
         float pulseToReach = convertDistanceToPulse(distance);
         int direction = 1;
-        if(distance < 0)
+        if (distance < 0)
             direction = -1;
 
         int32_t leftPulse;

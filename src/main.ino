@@ -6,9 +6,10 @@ Description: Breve description du script
 Date: Derniere date de modification
 */
 
-#include "Robot.h"
+#include "Path.h"
 
 Robot robus;
+Path path;
 
 void setup(){
   BoardInit();
@@ -16,7 +17,7 @@ void setup(){
   robus = Robot();
   robus.reset();
 
-  /*Step path[] = {
+  Step steps[] = {
     {MOVE, 90}, 
     {ROTATE, 45},
     {MOVE, 50},
@@ -28,17 +29,12 @@ void setup(){
     {MOVE, 100},
     {ROTATE, -90},
     {MOVE, 90}
-  };*/
-  //int length = 11; // cant use vector/list...
-  Step path[] = {
-    {MOVE, 30},
-    {ROTATE, 90},
-    {MOVE, 30}
   };
-  int length = 3;
-  
-  robus.executePath(path, length);
-  robus.reversePath(path, length);
+  int length = 11;
+
+  path = Path(robus, steps);
+  path.execute(length);
+  path.reverse(length);
 }
 
 void loop() {}

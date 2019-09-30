@@ -1,7 +1,7 @@
 #ifndef Robot_Utils_H_
 #define Robot_Utils_H_
 
-#include <LibRobus.h>
+#include <Arduino.h>
 
 const float ROBUS_WIDTH = 18.75;
 const float ROBUS_CIRCUMFERENCE = 2*PI*ROBUS_WIDTH;

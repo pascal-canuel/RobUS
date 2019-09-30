@@ -11,8 +11,6 @@ struct Motor
     Motor() {}
     Motor(uint8_t motorId) {
         _motorId = motorId;
-
-        // resetEncoder(); WTF
     }
 
     void resetEncoder() {

@@ -2,7 +2,6 @@
 #define Path_H_
 
 #include "Robot.h"
-#include <stddef.h>
 
 enum State {
     MOVE,
@@ -20,42 +19,31 @@ struct Path
     Robot _robot;
     Step* _steps;
 
+    Path() {}
     Path(Robot robot, Step steps[]) {
         _robot = robot;
         _steps = steps;
     }
     
     void _executeStep(Step step, int direction = 1) {
-        if(step.state == MOVE){
+        if (step.state == MOVE){
             _robot.move(step.value * direction);
         } else {
             _robot.rotate(step.value * direction);
         }
     }
 
-    template <size_t length>
-    void execute() {
-        for(Step step: _steps) {
-            _executeStep(step);
+    void execute(int length) {
+        for (int i = 0; i < length; i++) {
+            _executeStep(_steps[i]);
         }
     }
 
-    template <size_t length>
-    void reverse() {
+    void reverse(int length) {
         for (int i = length; i > 0; i--) {
-            Serial.println(i);
-            _reverseStep(path[i]);
+            _executeStep(_steps[i], -1);
         }
     }
 };
-
-/*
-template <size_t length>
-void execute(Step (&path)[length]) {
-  for (Step step: path) {
-
-  }
-}
-*/
 
 #endif
