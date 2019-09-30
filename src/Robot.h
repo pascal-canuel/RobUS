@@ -10,7 +10,7 @@ struct Robot
     Motor _leftMotor;
     Motor _rightMotor;
     PID _pid;
-
+    
     Robot() {
         _leftMotor = Motor(0);
         _rightMotor = Motor(1);
@@ -33,28 +33,23 @@ struct Robot
 
     void move(float distance) {
         float pulseToReach = convertDistanceToPulse(distance);
-        Serial.println(pulseToReach);
-
-        _leftMotor.setSpeed(DEFAULT_SPEED);
-        _rightMotor.setSpeed(DEFAULT_SPEED);
+        int direction = 1;
+        if(distance < 0)
+            direction = -1;
 
         int32_t leftPulse;
         int32_t rightPulse;
+        _leftMotor.setSpeed(DEFAULT_SPEED * direction);
+        _rightMotor.setSpeed(DEFAULT_SPEED * direction);
         do
         {
             leftPulse = _leftMotor.readEncoder();
             rightPulse = _rightMotor.readEncoder();
 
-           // float magic = _pid.Compute(leftPulse, rightPulse);
-           // Serial.println(magic);
-           // _rightMotor.addSpeed(DEFAULT_SPEED + magic);
+            // float magic = _pid.Compute(leftPulse, rightPulse);
+            // _rightMotor.addSpeed(DEFAULT_SPEED + magic);
+        } while (leftPulse * direction < pulseToReach && rightPulse * direction < pulseToReach);
 
-            Serial.print("Left motor | Pulse ");
-            Serial.println(leftPulse);
-            Serial.print("Right motor | Pulse ");
-            Serial.println(rightPulse);
-        } while (leftPulse < pulseToReach && rightPulse < pulseToReach);
-        
         _leftMotor.stop();
         _rightMotor.stop();
     }

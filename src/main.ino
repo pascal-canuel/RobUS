@@ -16,17 +16,29 @@ void setup(){
   robus = Robot();
   robus.reset();
 
-  robus.move(95);
-  robus.rotate(45);
-  robus.move(50);
-  robus.rotate(-90);
-  robus.move(170);
-  robus.rotate(45);
-  robus.move(80);
-  robus.rotate(90);
-  robus.move(100);
-  robus.rotate(-90);
-  robus.move(90);
+  /*Step path[] = {
+    {MOVE, 90}, 
+    {ROTATE, 45},
+    {MOVE, 50},
+    {ROTATE, -90},
+    {MOVE, 165},
+    {ROTATE, 45},
+    {MOVE, 80},
+    {ROTATE, 90},
+    {MOVE, 100},
+    {ROTATE, -90},
+    {MOVE, 90}
+  };*/
+  //int length = 11; // cant use vector/list...
+  Step path[] = {
+    {MOVE, 30},
+    {ROTATE, 90},
+    {MOVE, 30}
+  };
+  int length = 3;
+  
+  robus.executePath(path, length);
+  robus.reversePath(path, length);
 }
 
 void loop() {}
