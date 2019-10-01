@@ -26,7 +26,7 @@ struct Robot
         float pulseToReach = convertDistanceToPulse(distanceToReach);
 
         motor.setSpeed(DEFAULT_SPEED);
-        while (motor.readEncoder() < pulseToReach) {}
+        while (motor.readEncoder() <= pulseToReach) {}
 
         motor.stop();
     }
@@ -48,7 +48,7 @@ struct Robot
 
             // float magic = _pid.Compute(leftPulse, rightPulse);
             // _rightMotor.addSpeed(DEFAULT_SPEED + magic);
-        } while (leftPulse * direction < pulseToReach && rightPulse * direction < pulseToReach);
+        } while (leftPulse * direction <= pulseToReach && rightPulse * direction <= pulseToReach);
 
         _leftMotor.stop();
         _rightMotor.stop();
