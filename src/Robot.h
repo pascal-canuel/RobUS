@@ -17,7 +17,7 @@ struct Robot
         _rightMotor = Motor(1);
 
         _pidDelay = 500;
-        _pid = PID(_pidDelay, 0.1, 0.055);
+        _pid = PID(_pidDelay, 0.1, 0.065);
     }
 
     void rotate(float degree) {
@@ -32,6 +32,27 @@ struct Robot
         while (motor.readEncoder() <= pulseToReach) {}
 
         motor.stop();
+    }
+
+    void turn(float degree) {
+        degree /= 2;
+        Motor motor = _leftMotor;
+        Motor reverseMotor = _rightMotor;
+        if (degree > 0) {
+            motor = _rightMotor;
+            reverseMotor = _leftMotor;
+        }
+
+        float distanceToReach = convertDegreeToDistance(degree);
+        float pulseToReach = convertDistanceToPulse(distanceToReach);
+
+        motor.setSpeed(DEFAULT_SPEED);
+        reverseMotor.setSpeed(-DEFAULT_SPEED);
+
+        while (motor.readEncoder() <= pulseToReach && reverseMotor.readEncoder() * -1 <= pulseToReach) {}
+
+        motor.stop();
+        reverseMotor.stop();
     }
 
     void move(float distance) {
@@ -70,6 +91,11 @@ struct Robot
     void reset() {
         _leftMotor.resetEncoder();
         _rightMotor.resetEncoder();
+    }
+
+    void stop() {
+        _leftMotor.stop();
+        _rightMotor.stop();
     }
 };
 

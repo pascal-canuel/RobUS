@@ -16,28 +16,37 @@ void setup(){
 
   robus = Robot();
   robus.reset();
-
-  robus.move(100);
 }
 
-void loop() {}
+void loop() {
+  if (ROBUS_IsBumper(3)) {
+    // path
+    robus.move(115);
+    robus.rotate(90);
+    robus.move(70);
+    robus.rotate(-90);
+    robus.move(65);
+    robus.rotate(-45);
+    robus.move(185);
+    robus.rotate(90);
+    robus.move(40);
+    robus.rotate(-45);
+    robus.move(110);
 
-/*
-  Step steps[] = {
-    {MOVE, 90}, 
-    {ROTATE, 45},
-    {MOVE, 50},
-    {ROTATE, -90},
-    {MOVE, 165},
-    {ROTATE, 45},
-    {MOVE, 80},
-    {ROTATE, 90},
-    {MOVE, 100},
-    {ROTATE, -90},
-    {MOVE, 90}
-  };
-  int length = 11;
-  path = Path(robus, steps);
-  path.execute(length);
-  path.reverse(length);
-*/
+    delay(1000);
+    robus.turn(180);
+
+    // reverse
+    robus.move(100);
+    robus.rotate(45);
+    robus.move(50);
+    robus.rotate(-90);
+    robus.move(185);
+    robus.rotate(45);
+    robus.move(65);
+    robus.rotate(90);
+    robus.move(70);
+    robus.rotate(-90);
+    robus.move(115);
+  }
+}
