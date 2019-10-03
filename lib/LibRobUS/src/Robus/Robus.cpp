@@ -8,7 +8,8 @@ Class to interface some of the ArduinoX "on board" functionnalities
 #include "Robus.h"
 
 void Robus::init(){
-  for(uint8_t i = 0; i < 4; i++){
+  for(uint8_t i = 0; i < 4; i++)
+  {
     pinMode(BUMPER_PIN[i], INPUT);
   }
   for(uint8_t id = 0; id < 2; id++){
