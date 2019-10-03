@@ -10,43 +10,33 @@ Date: Derniere date de modification
 
 Robot robus;
 Path path;
+int length;
 
 void setup(){
   BoardInit();
 
   robus = Robot();
   robus.reset();
+  Step steps[] = {
+    {MOVE, 115},
+    {ROTATE, 90},
+    {MOVE, 70}, 
+    {ROTATE, -90},
+    {MOVE, 65},
+    {ROTATE, -45},
+    {MOVE, 185},
+    {ROTATE, 90},
+    {MOVE, 40},
+    {ROTATE, -45},
+    {MOVE, 100}
+  };
+  length = 11;
+  path = Path(robus, steps);
 }
 
 void loop() {
   if (ROBUS_IsBumper(3)) {
-    // path
-    robus.move(115);
-    robus.rotate(90);
-    robus.move(70);
-    robus.rotate(-90);
-    robus.move(65);
-    robus.rotate(-45);
-    robus.move(185);
-    robus.rotate(90);
-    robus.move(40);
-    robus.rotate(-45);
-    robus.move(110);
-
-    delay(1000);
-    robus.turn(180);
-
-    // reverse
-    robus.move(100);
-    robus.rotate(45);
-    robus.move(50);
-    robus.rotate(-90);
-    robus.move(185);
-    robus.rotate(45);
-    robus.move(65);
-    robus.rotate(90);
-    robus.move(70);
-    robus.rotate(-90);
-    robus.move(115);
+    path.execute(length);
+    path.reverse(length);
   }
 }
