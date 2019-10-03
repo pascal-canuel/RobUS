@@ -10,12 +10,13 @@ struct Robot
     Motor _leftMotor;
     Motor _rightMotor;
     PID _pid;
-    
+    unsigned _pidDelay;
     Robot() {
         _leftMotor = Motor(0);
         _rightMotor = Motor(1);
 
-        _pid = PID(500, 2, 5, 1);
+        _pidDelay = 500;
+        _pid = PID(_pidDelay, 0.1, 0.055);
     }
 
     void rotate(float degree) {
@@ -42,13 +43,23 @@ struct Robot
         int32_t rightPulse;
         _leftMotor.setSpeed(DEFAULT_SPEED * direction);
         _rightMotor.setSpeed(DEFAULT_SPEED * direction);
+
+        unsigned currentMillis = millis();
+        unsigned previousMillis = 0;
         do
         {
             leftPulse = _leftMotor.readEncoder();
             rightPulse = _rightMotor.readEncoder();
 
-            // float magic = _pid.Compute(leftPulse, rightPulse);
-            // _rightMotor.addSpeed(DEFAULT_SPEED + magic);
+            currentMillis = millis();
+            if (currentMillis - previousMillis > _pidDelay) {
+                previousMillis = currentMillis;
+                float magic = _pid.Compute(leftPulse, rightPulse);
+                Serial.print("magic: ");
+                Serial.println(magic);
+                _rightMotor.setSpeed(DEFAULT_SPEED + magic);
+            }
+
         } while (leftPulse * direction <= pulseToReach && rightPulse * direction <= pulseToReach);
 
         _leftMotor.stop();

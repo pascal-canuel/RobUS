@@ -17,10 +17,7 @@ void setup(){
   robus = Robot();
   robus.reset();
 
-  robus.move(30);
-  robus.rotate(90);
-  robus.rotate(-90);
-  robus.move(-30);
+  robus.move(100);
 }
 
 void loop() {}
