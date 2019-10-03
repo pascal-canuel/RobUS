@@ -17,6 +17,15 @@ void setup(){
   robus = Robot();
   robus.reset();
 
+  robus.move(30);
+  robus.rotate(90);
+  robus.rotate(-90);
+  robus.move(-30);
+}
+
+void loop() {}
+
+/*
   Step steps[] = {
     {MOVE, 90}, 
     {ROTATE, 45},
@@ -31,10 +40,7 @@ void setup(){
     {MOVE, 90}
   };
   int length = 11;
-
   path = Path(robus, steps);
   path.execute(length);
   path.reverse(length);
-}
-
-void loop() {}
+*/
