@@ -27,7 +27,7 @@ struct Path
     }
     
     void _executeStep(Step step, int direction = 1) {
-        if (step.state == MOVE){
+        if (step.state == MOVE) {
             _robot.move(step.value);
         } else if (step.state == ROTATE) {
             _robot.rotate(step.value * direction);
@@ -45,7 +45,7 @@ struct Path
     void reverse(int length) {
         delay(1000);
         _robot.turn(180);
-        for (int i = length; i > 0; i--) {
+        for (int i = length - 1; i >= 0; i--) {
             _executeStep(_steps[i], -1);
         }
     }

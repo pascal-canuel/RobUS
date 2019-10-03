@@ -18,17 +18,17 @@ void setup(){
   robus = Robot();
   robus.reset();
   Step steps[] = {
-    {MOVE, 115}, //122.5
+    {MOVE, 115},
     {ROTATE, 90},
-    {MOVE, 70}, //90
+    {MOVE, 70},
     {ROTATE, -90},
-    {MOVE, 65}, //87.5
+    {MOVE, 70},
     {ROTATE, -45},
-    {MOVE, 185}, //173.5
+    {MOVE, 185},
     {ROTATE, 90},
-    {MOVE, 40}, //44
+    {MOVE, 45},
     {ROTATE, -45},
-    {MOVE, 100} //110
+    {MOVE, 110}
   };
   length = 11;
   path = Path(robus, steps);

@@ -17,6 +17,9 @@ struct Robot
         _rightMotor = Motor(1);
 
         _pidDelay = 500;
+
+        // a | kp=0.09 | ki=0.08
+        // b | kp=0.1 | ki=0.065
         _pid = PID(_pidDelay, 0.1, 0.065);
     }
 
@@ -76,6 +79,9 @@ struct Robot
             currentMillis = millis();
             if (currentMillis - previousMillis > _pidDelay) {
                 previousMillis = currentMillis;
+
+                // b | error = left - right 
+                // a | error = right - left
                 float magic = _pid.Compute(leftPulse, rightPulse);
                 _rightMotor.setSpeed(DEFAULT_SPEED + magic);
             }
@@ -84,6 +90,8 @@ struct Robot
 
         _leftMotor.stop();
         _rightMotor.stop();
+
+        _pid.reset();
     }
 
     void reset() {

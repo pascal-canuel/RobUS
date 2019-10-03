@@ -1,7 +1,7 @@
 #ifndef PID
 #define PID_H_
 
-#include <LibRobus.h>
+#include <Arduino.h>
 
 struct PID
 {
@@ -12,11 +12,14 @@ struct PID
     PID() {}
     PID(float delay, float kp, float ki) {
         _delay = delay;
-        // Tuning
         _kp = kp;
         _ki = ki;
 
         Serial.println("e_p | e_i | output");
+    }
+
+    void reset() {
+        _totalError = 0;
     }
 
     float Compute(float referenceValue, float value) {

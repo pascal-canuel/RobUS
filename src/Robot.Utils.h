@@ -4,6 +4,7 @@
 #include <Arduino.h>
 
 const float ROBUS_WIDTH = 18.75;
+const float ROBUS_HEIGHT = 15;
 const float ROBUS_CIRCUMFERENCE = 2*PI*ROBUS_WIDTH;
 
 const float WHEEL_RADIUS = 3.81;
