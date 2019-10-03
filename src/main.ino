@@ -6,48 +6,41 @@ Description: Breve description du script
 Date: Derniere date de modification
 */
 
-/* ****************************************************************************
-Inclure les librairies de functions que vous voulez utiliser
-**************************************************************************** */
+#include "Path.h"
 
-#include <LibRobus.h> // Essentielle pour utiliser RobUS
-
-
-
-/* ****************************************************************************
-Variables globales et defines
-**************************************************************************** */
-// -> defines...
-// L'ensemble des fonctions y ont acces
-
-
-
-/* ****************************************************************************
-Vos propres fonctions sont creees ici
-**************************************************************************** */
-void maFonction(){
-  // code
-}
-
-
-/* ****************************************************************************
-Fonctions d'initialisation (setup)
-**************************************************************************** */
-// -> Se fait appeler au debut du programme
-// -> Se fait appeler seulement un fois
-// -> Generalement on y initilise les varibbles globales
+Robot robus;
+Path path;
 
 void setup(){
   BoardInit();
+
+  robus = Robot();
+  robus.reset();
+
+  robus.move(30);
+  robus.rotate(90);
+  robus.rotate(-90);
+  robus.move(-30);
 }
 
+void loop() {}
 
-/* ****************************************************************************
-Fonctions de boucle infini (loop())
-**************************************************************************** */
-// -> Se fait appeler perpetuellement suite au "setup"
-
-void loop() {
-  // SOFT_TIMER_Update(); // A decommenter pour utiliser des compteurs logiciels
-  delay(10);// Delais pour décharger le CPU
-}
+/*
+  Step steps[] = {
+    {MOVE, 90}, 
+    {ROTATE, 45},
+    {MOVE, 50},
+    {ROTATE, -90},
+    {MOVE, 165},
+    {ROTATE, 45},
+    {MOVE, 80},
+    {ROTATE, 90},
+    {MOVE, 100},
+    {ROTATE, -90},
+    {MOVE, 90}
+  };
+  int length = 11;
+  path = Path(robus, steps);
+  path.execute(length);
+  path.reverse(length);
+*/
