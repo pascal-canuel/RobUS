@@ -10,7 +10,8 @@ struct Robot
     Motor _leftMotor;
     Motor _rightMotor;
     PID _pid;
-    unsigned _pidDelay;
+    float _pidDelay;
+
     Robot() {
         _leftMotor = Motor(0);
         _rightMotor = Motor(1);
