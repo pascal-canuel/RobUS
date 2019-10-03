@@ -15,18 +15,22 @@ struct PID
         // Tuning
         _kp = kp;
         _ki = ki;
+
+        Serial.println("e_p | e_i | output");
     }
 
     float Compute(float referenceValue, float value) {
         float error = (referenceValue - value)/_delay;
-        Serial.print("proportional error: ");
-        Serial.println(error);
 
         _totalError += error;
-        Serial.print("integral error: ");
-        Serial.println(_totalError);
 
         float output = _kp * error + _ki * _totalError; 
+
+        Serial.print(error);
+        Serial.print(" | ");
+        Serial.print(_totalError);
+        Serial.print(" | ");
+        Serial.println(output);
 
         return output;
     }

@@ -5,7 +5,8 @@
 
 enum State {
     MOVE,
-    ROTATE
+    ROTATE,
+    TURN,
 };
 
 struct Step
@@ -28,8 +29,10 @@ struct Path
     void _executeStep(Step step, int direction = 1) {
         if (step.state == MOVE){
             _robot.move(step.value);
-        } else {
+        } else if (step.state == ROTATE) {
             _robot.rotate(step.value * direction);
+        } else {
+            _robot.turn(step.value * direction);
         }
     }
 
@@ -41,7 +44,7 @@ struct Path
 
     void reverse(int length) {
         delay(1000);
-        robus.turn(180);
+        _robot.turn(180);
         for (int i = length; i > 0; i--) {
             _executeStep(_steps[i], -1);
         }

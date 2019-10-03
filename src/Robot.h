@@ -77,8 +77,6 @@ struct Robot
             if (currentMillis - previousMillis > _pidDelay) {
                 previousMillis = currentMillis;
                 float magic = _pid.Compute(leftPulse, rightPulse);
-                Serial.print("magic: ");
-                Serial.println(magic);
                 _rightMotor.setSpeed(DEFAULT_SPEED + magic);
             }
 
