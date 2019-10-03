@@ -14,7 +14,8 @@ struct Robot
     Robot() {
         _leftMotor = Motor(0);
         _rightMotor = Motor(1);
-        _pid = PID(2, 5, 1);
+
+        _pid = PID(500, 2, 5, 1);
     }
 
     void rotate(float degree) {
