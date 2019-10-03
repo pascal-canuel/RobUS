@@ -1,6 +1,9 @@
 #ifndef Robot_H_
 #define Robot_H_
 
+// comment to compile for robus b
+#define ROBUS_A 
+
 #include "Robot.Utils.h"
 #include "PID.h"
 #include "Motor.h"
@@ -17,7 +20,12 @@ struct Robot
         _rightMotor = Motor(1);
 
         _pidDelay = 500;
-        _pid = PID(_pidDelay, 0.1, 0.055);
+
+        #ifdef ROBUS_A
+            _pid = PID(_pidDelay, 0.09, 0.08);
+        #else
+            _pid = PID(_pidDelay, 0.1, 0.065);
+        #endif
     }
 
     void rotate(float degree) {
@@ -32,6 +40,27 @@ struct Robot
         while (motor.readEncoder() <= pulseToReach) {}
 
         motor.stop();
+    }
+
+    void turn(float degree) {
+        degree /= 2;
+        Motor motor = _leftMotor;
+        Motor reverseMotor = _rightMotor;
+        if (degree > 0) {
+            motor = _rightMotor;
+            reverseMotor = _leftMotor;
+        }
+
+        float distanceToReach = convertDegreeToDistance(degree);
+        float pulseToReach = convertDistanceToPulse(distanceToReach);
+
+        motor.setSpeed(DEFAULT_SPEED);
+        reverseMotor.setSpeed(-DEFAULT_SPEED);
+
+        while (motor.readEncoder() <= pulseToReach && reverseMotor.readEncoder() * -1 <= pulseToReach) {}
+
+        motor.stop();
+        reverseMotor.stop();
     }
 
     void move(float distance) {
@@ -55,21 +84,32 @@ struct Robot
             currentMillis = millis();
             if (currentMillis - previousMillis > _pidDelay) {
                 previousMillis = currentMillis;
-                float magic = _pid.Compute(leftPulse, rightPulse);
-                Serial.print("magic: ");
-                Serial.println(magic);
-                _rightMotor.setSpeed(DEFAULT_SPEED + magic);
+
+                #ifdef ROBUS_A
+                    float magic = _pid.Compute(rightPulse, leftPulse);
+                    _leftMotor.setSpeed(DEFAULT_SPEED + magic);
+                #else
+                    float magic = _pid.Compute(leftPulse, rightPulse);
+                    _rightMotor.setSpeed(DEFAULT_SPEED + magic);
+                #endif
             }
 
         } while (leftPulse * direction <= pulseToReach && rightPulse * direction <= pulseToReach);
 
         _leftMotor.stop();
         _rightMotor.stop();
+
+        _pid.reset();
     }
 
     void reset() {
         _leftMotor.resetEncoder();
         _rightMotor.resetEncoder();
+    }
+
+    void stop() {
+        _leftMotor.stop();
+        _rightMotor.stop();
     }
 };
 
