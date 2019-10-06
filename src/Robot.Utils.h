@@ -13,11 +13,11 @@ const float WHEEL_TOUR_PULSE = 3200;
 
 const float DEFAULT_SPEED = 0.35;
 
-static int32_t convertDegreeToDistance(float degree) {
+int32_t convertDegreeToDistance(float degree) {
     return abs((degree/360) * ROBUS_CIRCUMFERENCE);
 }
 
-static int32_t convertDistanceToPulse(float distance) {
+int32_t convertDistanceToPulse(float distance) {
     return abs((distance/WHEEL_CIRCUMFERENCE) * WHEEL_TOUR_PULSE);
 }
 
