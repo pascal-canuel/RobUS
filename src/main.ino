@@ -17,20 +17,37 @@ void setup(){
 
   robus = Robot();
   robus.reset();
-  Step steps[] = {
-    {MOVE, 115},
-    {ROTATE, 90},
-    {MOVE, 70},
-    {ROTATE, -90},
-    {MOVE, 70},
-    {ROTATE, -45},
-    {MOVE, 185},
-    {ROTATE, 90},
-    {MOVE, 45},
-    {ROTATE, -45},
-    {MOVE, 110}
-  };
   length = 11;
+  #ifdef ROBUS_A
+    float diff = 10;
+    Step steps[11] = {
+        {MOVE, 120 - diff},
+        {ROTATE, 90},
+        {MOVE, 90 - diff},
+        {ROTATE, -90},
+        {MOVE, 90 - diff},
+        {ROTATE, -45},
+        {MOVE, 183},
+        {ROTATE, 90},
+        {MOVE, 50 - diff},
+        {ROTATE, -45},
+        {MOVE, 135 - diff}
+      };
+  #else
+    Step steps[11] = {
+        {MOVE, 120},
+        {TURN, 90},
+        {MOVE, 90},
+        {TURN, -90},
+        {MOVE, 90},
+        {TURN, -45},
+        {MOVE, 183},
+        {TURN, 90},
+        {MOVE, 50},
+        {TURN, -45},
+        {MOVE, 135}
+      };
+  #endif
   path = Path(robus, steps);
 }
 

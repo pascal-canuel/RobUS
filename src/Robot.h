@@ -1,7 +1,7 @@
 #ifndef Robot_H_
 #define Robot_H_
 
-// comment to compile for robus b
+/* comment to compile for robus b */
 #define ROBUS_A 
 
 #include "Robot.Utils.h"
@@ -21,11 +21,7 @@ struct Robot
 
         _pidDelay = 500;
 
-        #ifdef ROBUS_A
-            _pid = PID(_pidDelay, 0.09, 0.08);
-        #else
-            _pid = PID(_pidDelay, 0.1, 0.065);
-        #endif
+        _pid = PID(_pidDelay, 0.1, 0.065);
     }
 
     void rotate(float degree) {
@@ -87,7 +83,7 @@ struct Robot
 
                 #ifdef ROBUS_A
                     float magic = _pid.Compute(rightPulse, leftPulse);
-                    _leftMotor.setSpeed(DEFAULT_SPEED + magic);
+                     _leftMotor.setSpeed(DEFAULT_SPEED + magic + 0.02);
                 #else
                     float magic = _pid.Compute(leftPulse, rightPulse);
                     _rightMotor.setSpeed(DEFAULT_SPEED + magic);
