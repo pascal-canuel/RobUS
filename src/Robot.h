@@ -84,9 +84,6 @@ struct Robot
                 #ifdef ROBUS_A
                     float magic = _pid.Compute(rightPulse, leftPulse);
                      _leftMotor.setSpeed(DEFAULT_SPEED + magic + 0.02);
-                    // Serial.print(leftPulse);
-                    // Serial.print(" | ");
-                    // Serial.println(rightPulse);
                 #else
                     float magic = _pid.Compute(leftPulse, rightPulse);
                     _rightMotor.setSpeed(DEFAULT_SPEED + magic);

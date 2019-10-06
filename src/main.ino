@@ -17,28 +17,42 @@ void setup(){
 
   robus = Robot();
   robus.reset();
-   Step steps[] = {
-    {MOVE, 115},
-    {ROTATE, 90},
-    {MOVE, 70},
-    {ROTATE, -90},
-    {MOVE, 70},
-    {ROTATE, -45},
-    {MOVE, 185},
-    {ROTATE, 90},
-    {MOVE, 45},
-    {ROTATE, -45},
-    {MOVE, 110}
-  };
   length = 11;
+  #ifdef ROBUS_A
+    Step steps[11] = {
+        {MOVE, 120},
+        {ROTATE, 90},
+        {MOVE, 90},
+        {ROTATE, -90},
+        {MOVE, 90},
+        {ROTATE, -45},
+        {MOVE, 183},
+        {ROTATE, 90},
+        {MOVE, 50},
+        {ROTATE, -45},
+        {MOVE, 135}
+      };
+  #else
+    Step steps[11] = {
+        {MOVE, 120},
+        {TURN, 90},
+        {MOVE, 90},
+        {TURN, -90},
+        {MOVE, 90},
+        {TURN, -45},
+        {MOVE, 183},
+        {TURN, 90},
+        {MOVE, 50},
+        {TURN, -45},
+        {MOVE, 135}
+      };
+  #endif
   path = Path(robus, steps);
 }
 
 void loop() {
   if (ROBUS_IsBumper(3)) {
-    robus.turn(180);
-    robus.move(50);
-    //path.execute(length);
-    //path.reverse(length);
+    path.execute(length);
+    path.reverse(length);
   }
 }
