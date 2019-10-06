@@ -64,6 +64,8 @@ struct Robot
     }
 
     void move(float distance) {
+        Motor motor = _leftMotor;
+
         float pulseToReach = convertDistanceToPulse(distance);
         int direction = 1;
         if (distance < 0)
@@ -71,6 +73,30 @@ struct Robot
 
         int32_t leftPulse;
         int32_t rightPulse;
+        float acceleration = 0.1;
+        unsigned current_Millis_Accel;
+        unsigned previous_Millis_Accel = millis();
+        
+        for(int i=0;i<10;i++)
+        {
+            int n=1;
+            current_Millis_Accel=millis();
+            int delta_Time = current_Millis_Accel-previous_Millis_Accel;
+            int PulseReached = motor.readEncoder();
+            if(delta_Time>100*n && PulseReached<pulseToReach/2)
+            {
+                _leftMotor.setSpeed(DEFAULT_SPEED * acceleration * direction);
+                acceleration+=0.1;
+            }
+            if (delta_Time>100*n && PulseReached>pulseToReach/2)
+            {
+                _leftMotor.setSpeed(DEFAULT_SPEED * acceleration * direction);
+                acceleration-=0.1;
+            } 
+            n++;
+        }
+
+
         _leftMotor.setSpeed(DEFAULT_SPEED * direction);
         _rightMotor.setSpeed(DEFAULT_SPEED * direction);
 
