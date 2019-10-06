@@ -17,7 +17,7 @@ void setup(){
 
   robus = Robot();
   robus.reset();
-  Step steps[] = {
+   Step steps[] = {
     {MOVE, 115},
     {ROTATE, 90},
     {MOVE, 70},
@@ -36,7 +36,9 @@ void setup(){
 
 void loop() {
   if (ROBUS_IsBumper(3)) {
-    path.execute(length);
-    path.reverse(length);
+    robus.turn(180);
+    robus.move(50);
+    //path.execute(length);
+    //path.reverse(length);
   }
 }
