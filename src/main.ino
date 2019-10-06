@@ -33,6 +33,7 @@ void maFonction(){
 //Description : cela calcule le nbr necessaire de pulse pour atteindre une certaine distance puis fait une boucle pour que le robot se stope quand il a atteint cette distance
 //Précondition : la valeur en centimetre de la distance a parcourir et la vitesse des moteurs
 //Postcondition : le nombre de pulse pour atteindre cette distance
+
 void distance (float vdistance, float vmoteura)
 {
   ENCODER_ReadReset(0);
@@ -181,7 +182,7 @@ void demitour (float vmoteura,  float angle)
 
 float controlem (float d, float g, float vmoteurb)
 {
-  float calcule = 0, corection1, corection2, Kp = 0.001, erreur_totale = 0, Ki = 0.00055, corection, circonference;
+  float calcule = 0, corection1, corection2, Kp = 5, erreur_totale = 0, Ki = 0.0055, corection, circonference;
   
   calcule = g-d;
   calcule = (calcule*circonference)/3200;
@@ -255,5 +256,5 @@ void loop()
   distance (75,0.4);
   demitour(0.4,90);
   *********/
- demitour(0.4,90);
+ distance(200,0.4);
 }
