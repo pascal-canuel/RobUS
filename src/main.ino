@@ -19,18 +19,19 @@ void setup(){
   robus.reset();
   length = 11;
   #ifdef ROBUS_A
+    float diff = 5;
     Step steps[11] = {
         {MOVE, 120},
         {ROTATE, 90},
-        {MOVE, 90},
+        {MOVE, 90 - diff},
         {ROTATE, -90},
-        {MOVE, 90},
+        {MOVE, 90 - diff},
         {ROTATE, -45},
-        {MOVE, 183},
+        {MOVE, 183 - diff},
         {ROTATE, 90},
-        {MOVE, 50},
+        {MOVE, 50 - diff},
         {ROTATE, -45},
-        {MOVE, 135}
+        {MOVE, 135 - diff}
       };
   #else
     Step steps[11] = {
