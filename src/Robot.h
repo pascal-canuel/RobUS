@@ -40,22 +40,33 @@ struct Robot
 
     void turn(float degree) {
         degree /= 2;
-        Motor motor = _leftMotor;
+        Motor forwardMotor = _leftMotor;
         Motor reverseMotor = _rightMotor;
         if (degree > 0) {
-            motor = _rightMotor;
+            forwardMotor = _rightMotor;
             reverseMotor = _leftMotor;
         }
 
         float distanceToReach = convertDegreeToDistance(degree);
         float pulseToReach = convertDistanceToPulse(distanceToReach);
 
-        motor.setSpeed(DEFAULT_SPEED);
+        forwardMotor.setSpeed(DEFAULT_SPEED);
         reverseMotor.setSpeed(-DEFAULT_SPEED);
 
-        while (motor.readEncoder() <= pulseToReach && reverseMotor.readEncoder() * -1 <= pulseToReach) {}
+        int32_t forwardPulse;
+        int32_t reversePulse;
+        do
+        {
+            forwardPulse = forwardMotor.readEncoder();
+            reversePulse = reverseMotor.readEncoder();
 
-        motor.stop();
+            if (forwardPulse > pulseToReach)
+                forwardMotor.stop();
+            if (reversePulse * -1 > pulseToReach)
+                reverseMotor.stop();
+        } while (forwardPulse <= pulseToReach || reversePulse * -1 <= pulseToReach);
+        
+        forwardMotor.stop();
         reverseMotor.stop();
     }
 
@@ -83,13 +94,15 @@ struct Robot
 
                 #ifdef ROBUS_A
                     float magic = _pid.Compute(rightPulse, leftPulse);
-                     _leftMotor.setSpeed(DEFAULT_SPEED + magic + 0.02);
+                     _leftMotor.setSpeed((DEFAULT_SPEED + magic + 0.02) * direction);
                 #else
-                    float magic = _pid.Compute(leftPulse, rightPulse);
-                    _rightMotor.setSpeed(DEFAULT_SPEED + magic);
+                   float magic = _pid.Compute(leftPulse, rightPulse);
+                   _rightMotor.setSpeed((DEFAULT_SPEED + magic) * direction);
                 #endif
+                //Serial.print(leftPulse);
+                //Serial.print(" | ");
+                //Serial.println(rightPulse);
             }
-
         } while (leftPulse * direction <= pulseToReach && rightPulse * direction <= pulseToReach);
 
         _leftMotor.stop();
