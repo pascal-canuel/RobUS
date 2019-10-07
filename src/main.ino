@@ -1,9 +1,14 @@
 /*
-Projet: Le nom du script
-Equipe: Votre numero d'equipe
-Auteurs: Les membres auteurs du script
-Description: Breve description du script
-Date: Derniere date de modification
+Projet: Parcours du combattant
+Equipe: Les 100 ID
+Auteurs: 
+  - Marie-Eve Castonguay
+  - Adam Beliveau
+  - Eloise Marchal
+  - Pascal Canuel
+  - Raphael Auclair
+  - Williams Gravel
+  - Xavier Champagne
 */
 
 #include "Path.h"

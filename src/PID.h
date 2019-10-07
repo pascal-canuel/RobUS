@@ -15,7 +15,7 @@ struct PID
         _kp = kp;
         _ki = ki;
 
-        Serial.println("e_p | e_i | output");
+        //Serial.println("e_p | e_i | output");
     }
 
     void reset() {
@@ -29,11 +29,11 @@ struct PID
 
         float output = _kp * error + _ki * _totalError; 
 
-        Serial.print(error);
-        Serial.print(" | ");
-        Serial.print(_totalError);
-        Serial.print(" | ");
-        Serial.println(output);
+        //Serial.print(error);
+        //Serial.print(" | ");
+        //Serial.print(_totalError);
+        //Serial.print(" | ");
+        //Serial.println(output);
 
         return output;
     }
