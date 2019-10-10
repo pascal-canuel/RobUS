@@ -25,8 +25,6 @@ struct Robot
     }
 
     void rotate(float degree) {
-        delay(500);
-        
         Motor motor = _leftMotor;
         if (degree > 0) 
             motor = _rightMotor;
@@ -38,7 +36,6 @@ struct Robot
         while (motor.readEncoder() <= pulseToReach) {}
 
         motor.stop();
-        delay(500);
     }
 
     void turn(float degree) {

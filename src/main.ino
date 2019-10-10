@@ -30,11 +30,11 @@ void setup(){
     {ROTATE, -90},
     {MOVE, 25},
     {ROTATE, -90},
-    {MOVE, 40},
-    {ROTATE, 90},
-    {MOVE, 90},
-    {ROTATE, -90},
     {MOVE, 35},
+    {ROTATE, 90},
+    {MOVE, 80},
+    {ROTATE, -90},
+    {MOVE, 32},
     {ROTATE, 90},
     {MOVE, 125}
   };
