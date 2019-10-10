@@ -43,7 +43,7 @@ struct Path
     }
 
     void reverse(int length) {
-        _robot.turn(180);
+        _robot.turn(184);
         for (int i = length - 1; i >= 0; i--) {
             _executeStep(_steps[i], -1);
         }

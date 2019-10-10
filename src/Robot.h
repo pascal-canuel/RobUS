@@ -115,6 +115,40 @@ struct Robot
         _pid.reset();
     }
 
+    void forward(float speed = DEFAULT_SPEED) {
+        _leftMotor.setSpeed(speed);
+        _rightMotor.setSpeed(speed);
+
+        int32_t leftPulse;
+        int32_t rightPulse;
+
+        unsigned currentMillis = millis();
+        unsigned previousMillis = 0;
+        do
+        {
+            leftPulse = _leftMotor.readEncoder();
+            rightPulse = _rightMotor.readEncoder();
+
+            currentMillis = millis();
+            if (currentMillis - previousMillis > _pidDelay) {
+                previousMillis = currentMillis;
+
+                #ifdef ROBUS_A
+                    float magic = _pid.Compute(rightPulse, leftPulse);
+                     _leftMotor.setSpeed(DEFAULT_SPEED + magic + 0.02);
+                #else
+                   float magic = _pid.Compute(leftPulse, rightPulse);
+                   _rightMotor.setSpeed(DEFAULT_SPEED + magic);
+                #endif
+            }
+        } while (!ROBUS_IsBumper(3));
+
+        _leftMotor.stop();
+        _rightMotor.stop();
+
+        _pid.reset();
+    }
+
     void reset() {
         _leftMotor.resetEncoder();
         _rightMotor.resetEncoder();

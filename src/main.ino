@@ -34,7 +34,7 @@ void setup(){
     {ROTATE, 90},
     {MOVE, 80},
     {ROTATE, -90},
-    {MOVE, 32},
+    {MOVE, 35},
     {ROTATE, 90},
     {MOVE, 125}
   };
@@ -44,6 +44,7 @@ void setup(){
 void loop() {
   if (ROBUS_IsBumper(3)) {
     path.execute(length);
-    path.reverse(length);
+    robus.turn(184);
+    robus.forward();
   }
 }
