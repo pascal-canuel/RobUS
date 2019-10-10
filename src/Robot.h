@@ -2,7 +2,7 @@
 #define Robot_H_
 
 /* comment to compile for robus b */
-#define ROBUS_A 
+//#define ROBUS_A
 
 #include "Robot.Utils.h"
 #include "PID.h"
@@ -60,12 +60,16 @@ struct Robot
             forwardPulse = forwardMotor.readEncoder();
             reversePulse = reverseMotor.readEncoder();
 
-            if (forwardPulse > pulseToReach)
-                forwardMotor.stop();
-            if (reversePulse * -1 > pulseToReach)
-                reverseMotor.stop();
-        } while (forwardPulse <= pulseToReach || reversePulse * -1 <= pulseToReach);
+            if (forwardPulse >= pulseToReach)
+                forwardMotor.setSpeed(0);
+            if (reversePulse <= -pulseToReach)
+                reverseMotor.setSpeed(0);
+        } while (forwardPulse < pulseToReach || reversePulse > -pulseToReach);
         
+        //Serial.println(pulseToReach);
+        //Serial.println(forwardPulse);
+        //Serial.println(reversePulse);
+
         forwardMotor.stop();
         reverseMotor.stop();
     }
