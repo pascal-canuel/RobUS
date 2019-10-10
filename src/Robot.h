@@ -2,7 +2,7 @@
 #define Robot_H_
 
 /* comment to compile for robus b */
-//#define ROBUS_A
+#define ROBUS_A
 
 #include "Robot.Utils.h"
 #include "PID.h"
@@ -25,6 +25,8 @@ struct Robot
     }
 
     void rotate(float degree) {
+        delay(500);
+        
         Motor motor = _leftMotor;
         if (degree > 0) 
             motor = _rightMotor;
@@ -36,6 +38,7 @@ struct Robot
         while (motor.readEncoder() <= pulseToReach) {}
 
         motor.stop();
+        delay(500);
     }
 
     void turn(float degree) {
