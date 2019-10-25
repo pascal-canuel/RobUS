@@ -14,37 +14,44 @@ Auteurs:
 #include "Path.h"
 
 Robot robus;
-Path path;
-int length;
+uint8_t angle = 90;
+
+void readBle() {
+  Serial.println(BLUETOOTH_read());
+}
 
 void setup(){
   BoardInit();
 
   robus = Robot();
   robus.reset();
-  length = 13;
-  Step steps[] = {
-    {MOVE, 220},
-    {ROTATE, 90},
-    {MOVE, 80},
-    {ROTATE, -90},
-    {MOVE, 25},
-    {ROTATE, -90},
-    {MOVE, 35},
-    {ROTATE, 90},
-    {MOVE, 80},
-    {ROTATE, -90},
-    {MOVE, 35},
-    {ROTATE, 90},
-    {MOVE, 125}
-  };
-  path = Path(robus, steps);
+
+  SERVO_Enable(0);
+  SERVO_Enable(1);
+
+  BluetoothInit();
+  BLUETOOTH_setCallback(readBle);
+  BLUETOOTH_println("AT+MAC?");
 }
 
 void loop() {
-  if (ROBUS_IsBumper(3)) {
-    path.execute(length);
-    robus.turn(184);
-    robus.forward();
+  if (ROBUS_IsBumper(0)) {
+    if (angle > 0) {
+      angle -= 1;
+      Serial.println(angle);
+      SERVO_SetAngle(0, angle);
+      SERVO_SetAngle(1, angle);
+    }
+  }
+  if (ROBUS_IsBumper(1)) {
+    if (angle < 180) {
+      angle += 1;
+      Serial.println(angle);
+      SERVO_SetAngle(0, angle);
+      SERVO_SetAngle(1, angle);
+    }
+  }
+  if(ROBUS_IsBumper(2)) {
+    BLUETOOTH_println("nani");
   }
 }
