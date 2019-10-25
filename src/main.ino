@@ -13,12 +13,10 @@ Auteurs:
 
 #include "Path.h"
 
-Robot robus;
-uint8_t angle = 90;
+#include <Wire.h>
+#include "SparkFunISL29125.h"
 
-void readBle() {
-  Serial.println(BLUETOOTH_read());
-}
+Robot robus;
 
 void setup(){
   BoardInit();
@@ -26,32 +24,80 @@ void setup(){
   robus = Robot();
   robus.reset();
 
-  SERVO_Enable(0);
-  SERVO_Enable(1);
-
-  BluetoothInit();
-  BLUETOOTH_setCallback(readBle);
-  BLUETOOTH_println("AT+MAC?");
+  // Serial.begin(115200); // BoardInit() -> 9600
 }
 
 void loop() {
-  if (ROBUS_IsBumper(0)) {
-    if (angle > 0) {
-      angle -= 1;
-      Serial.println(angle);
-      SERVO_SetAngle(0, angle);
-      SERVO_SetAngle(1, angle);
-    }
+  /*
+  Serial.print("Red: "); Serial.print(red);
+  Serial.print("Green: "); Serial.print(green);
+  Serial.print("Blue: "); Serial.print(blue);
+  Serial.println();
+  */ 
+ 
+  delay(2000);
+}
+
+enum Color {
+  YELLOW, 
+  GREEN,
+  BLUE,
+  RED,
+  UNDEFINED
+};
+
+struct Rgb {
+  uint16_t red, green, blue;
+};
+
+float rgbToHue(Rgb rgb) {
+  float red = rgb.red / 255.;
+  float green = rgb.green / 255.;
+  float blue = rgb.blue / 255.;
+
+  float cMax = max(max(red, green), blue); 
+  float cMin = min(min(red, green), blue);
+
+  float delta = cMax - cMin;
+  float hue = 0;
+
+  if (blue == cMax) {
+    hue = 60 * ((red - green) / delta + 4);
   }
-  if (ROBUS_IsBumper(1)) {
-    if (angle < 180) {
-      angle += 1;
-      Serial.println(angle);
-      SERVO_SetAngle(0, angle);
-      SERVO_SetAngle(1, angle);
-    }
+  else if (green == cMax) {
+    hue = 60 * ((blue - red) / delta + 2);
   }
-  if(ROBUS_IsBumper(2)) {
-    BLUETOOTH_println("nani");
+  else if (red == cMax) {
+    hue = 60 * ((green - blue) / delta);	
+    if (hue < 0)
+      hue += 360;
   }
+
+  return hue / 2;
+} 
+
+/*
+  Hue values range:
+  Orange  0 - 22
+  Yellow 22 - 38
+  Green 38 - 75
+  Blue 75 - 130
+  Violet 130 - 160
+  Red 160 - 179
+*/
+Color hueToColor(float hue) {
+  if (22 < hue <= 38)
+    return YELLOW;
+  if (38 < hue <= 75) 
+    return GREEN;
+  if (75 < hue <= 130)
+    return BLUE;
+  if (160 < hue <= 179)
+    return RED;
+  
+  return UNDEFINED;
+}
+
+Color rgbToColor(Rgb rgb) {
+  return hueToColor(rgbToHue(rgb));
 }

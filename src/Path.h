@@ -6,7 +6,7 @@
 enum State {
     MOVE,
     ROTATE,
-    TURN,
+    TURN
 };
 
 struct Step
