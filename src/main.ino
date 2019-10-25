@@ -14,9 +14,11 @@ Auteurs:
 #include "Path.h"
 
 #include <Wire.h>
-#include "SparkFunISL29125.h"
+#include "Adafruit_TCS34725.h"
 
 Robot robus;
+
+Adafruit_TCS34725 tcs = Adafruit_TCS34725();
 
 void setup(){
   BoardInit();
@@ -24,17 +26,24 @@ void setup(){
   robus = Robot();
   robus.reset();
 
-  // Serial.begin(115200); // BoardInit() -> 9600
+  if (tcs.begin()) {
+    Serial.println("Found sensor");
+  } else {
+    Serial.println("No TCS34725 found ... check your connections");
+  }
 }
 
 void loop() {
-  /*
-  Serial.print("Red: "); Serial.print(red);
-  Serial.print("Green: "); Serial.print(green);
-  Serial.print("Blue: "); Serial.print(blue);
-  Serial.println();
-  */ 
- 
+  // uint16_t red, green, blue, clear;
+  // tcs.getRawData(&red, &green, &blue, &clear);
+
+  float red, green, blue, clear;
+  tcs.getRGB(&red, &green, &blue);
+
+  Rgb rgb { red, green, blue };
+  Color color = rgbToColor(rgb);
+
+  Serial.println(color);
   delay(2000);
 }
 
