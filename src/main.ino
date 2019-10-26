@@ -20,6 +20,18 @@ Robot robus;
 
 Adafruit_TCS34725 tcs = Adafruit_TCS34725();
 
+enum Color {
+  YELLOW, 
+  GREEN,
+  BLUE,
+  RED,
+  UNDEFINED
+};
+
+struct Rgb {
+  uint16_t red, green, blue;
+};
+
 void setup(){
   BoardInit();
 
@@ -47,17 +59,6 @@ void loop() {
   delay(2000);
 }
 
-enum Color {
-  YELLOW, 
-  GREEN,
-  BLUE,
-  RED,
-  UNDEFINED
-};
-
-struct Rgb {
-  uint16_t red, green, blue;
-};
 
 float rgbToHue(Rgb rgb) {
   float red = rgb.red / 255.;
