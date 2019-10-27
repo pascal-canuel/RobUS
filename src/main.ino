@@ -7,36 +7,53 @@ Date: Derniere date de modification
 */
 
 #include "Path.h"
+#include "math.h"
 
-Robot robus;
-Path path;
-int length;
 
-void setup(){
-  BoardInit();
+bool Detection(int,int,int);
 
-  robus = Robot();
-  robus.reset();
-  Step steps[] = {
-    {MOVE, 115},
-    {ROTATE, 90},
-    {MOVE, 70},
-    {ROTATE, -90},
-    {MOVE, 70},
-    {ROTATE, -45},
-    {MOVE, 185},
-    {ROTATE, 90},
-    {MOVE, 45},
-    {ROTATE, -45},
-    {MOVE, 110}
-  };
-  length = 11;
-  path = Path(robus, steps);
+void setup()
+{
+  BoardInit(); 
 }
 
-void loop() {
-  if (ROBUS_IsBumper(3)) {
-    path.execute(length);
-    path.reverse(length);
+void loop()
+{
+  
+  int sensorPin = 0;
+  bool verifBallon = false;
+  int limiteMax = 21;
+  int limiteMin = 13;
+  verifBallon = Detection(limiteMax ,limiteMin, sensorPin);  
+  if(verifBallon==true)
+  {
+    Serial.println("pas de ballon");
   }
+  else
+  { 
+    limiteMax = 9;
+    limiteMin = 5;
+    verifBallon = Detection(limiteMax,limiteMin,sensorPin);
+    if(verifBallon == true)
+    {
+      Serial.println("Ballon");
+    }
+  }
+ 
+  delay(500);
+}
+
+bool Detection(int limiteMax, int limiteMin,int sensorPin)
+{
+  int val = 0;
+  int distance = 0;
+
+  val = analogRead(sensorPin);
+  distance = (7960.9*pow(val,-1.094));
+  Serial.println(distance);
+
+  if(distance<limiteMax && distance>limiteMin)
+    return true;
+  else
+    return false;
 }

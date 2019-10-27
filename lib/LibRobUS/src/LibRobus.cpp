@@ -7,6 +7,7 @@ Class to interface some of the ArduinoX "on board" functionnalities
 
 #include <LibRobus.h>
 
+
 // Objects creation
   Robus __Robus__;
   ArduinoX __AX__;
