@@ -65,12 +65,12 @@ void captorCallback() {
 */
 void followline(int leftVal, int centerVal, int rightVal) {
   if (leftVal && centerVal && rightVal) {
-
+    // Todo
   } else if (leftVal) {
-
+    // Todo
   } else if (centerVal) {
-
+    // Todo
   } else if (rightVal) {
-
+    // Todo
   }
 }
