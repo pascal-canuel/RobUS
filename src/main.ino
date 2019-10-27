@@ -29,9 +29,7 @@ void setup(){
   SERVO_Enable(0);
   SERVO_Enable(1);
 
-  BluetoothInit();
-  BLUETOOTH_setCallback(readBle);
-  BLUETOOTH_println("AT+MAC?");
+  openCage();
 }
 
 void loop() {
@@ -51,7 +49,21 @@ void loop() {
       SERVO_SetAngle(1, angle);
     }
   }
-  if(ROBUS_IsBumper(2)) {
-    BLUETOOTH_println("nani");
+  if (ROBUS_IsBumper(3)) {
+    closeCage();
+    delay(500);
+    MOTOR_SetSpeed(0, 0.2);
+    MOTOR_SetSpeed(1, 0.2);
+    delay(4000);
+    MOTOR_SetSpeed(0, 0);
+    MOTOR_SetSpeed(1, 0);
   }
+}
+
+void openCage() {
+  SERVO_SetAngle(1, 180);
+}
+
+void closeCage() {
+  SERVO_SetAngle(1, 130);
 }
