@@ -46,11 +46,15 @@ void setup(){
 }
 
 void loop() {
-  // uint16_t red, green, blue, clear;
-  // tcs.getRawData(&red, &green, &blue, &clear);
+  //uint16_t red, green, blue, clear;
+  //tcs.getRawData(&red, &green, &blue, &clear);
 
   float red, green, blue, clear;
   tcs.getRGB(&red, &green, &blue);
+
+  Serial.print("red"); Serial.println(red);
+  Serial.print("green"); Serial.println(green);
+  Serial.print("blue"); Serial.println(blue);
 
   Rgb rgb { red, green, blue };
   Color color = rgbToColor(rgb);
@@ -58,7 +62,6 @@ void loop() {
   Serial.println(color);
   delay(2000);
 }
-
 
 float rgbToHue(Rgb rgb) {
   float red = rgb.red / 255.;
