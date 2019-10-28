@@ -11,39 +11,20 @@ Auteurs:
   - Xavier Champagne
 */
 
-#include "Path.h"
+#include "robot/Robot.h"
 
 Robot robus;
-Path path;
-int length;
 
 void setup(){
   BoardInit();
 
   robus = Robot();
-  robus.reset();
-  length = 13;
-  Step steps[] = {
-    {MOVE, 220},
-    {ROTATE, 90},
-    {MOVE, 80},
-    {ROTATE, -90},
-    {MOVE, 25},
-    {ROTATE, -90},
-    {MOVE, 35},
-    {ROTATE, 90},
-    {MOVE, 80},
-    {ROTATE, -90},
-    {MOVE, 32},
-    {ROTATE, 90},
-    {MOVE, 125}
-  };
-  path = Path(robus, steps);
+  robus.init();
 }
 
 void loop() {
-  if (ROBUS_IsBumper(3)) {
-    path.execute(length);
-    path.reverse(length);
-  }
+  Color color = robus.readColor();
+  Serial.print("color: "); Serial.println(color);
+
+  delay(2000);
 }

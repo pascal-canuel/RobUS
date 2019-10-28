@@ -5,23 +5,40 @@
 #define ROBUS_A
 
 #include "Robot.Utils.h"
+
+#include "parts/Motor.h"
+#include "parts/Clamp.h"
+
+#include "sensors/ColorSensor.h"
+#include "sensors/DistanceSensor.h"
+#include "sensors/LineFollowerSensor.h"
+
 #include "PID.h"
-#include "Motor.h"
 
 struct Robot
 {
     Motor _leftMotor;
     Motor _rightMotor;
+    Clamp _clamp;
+
+    ColorSensor _colorSensor;
+    DistanceSensor _distanceSensor;
+    LineFollowerSensor _lineFollowerSensor;
+
     PID _pid;
     float _pidDelay;
 
     Robot() {
         _leftMotor = Motor(0);
         _rightMotor = Motor(1);
+        _clamp = Clamp();
 
-        _pidDelay = 500;
-
+        _colorSensor = ColorSensor();
+        _distanceSensor = DistanceSensor();
+        _lineFollowerSensor = LineFollowerSensor();
+        
         _pid = PID(_pidDelay, 0.1, 0.065);
+        _pidDelay = 500;
     }
 
     void rotate(float degree) {
@@ -66,10 +83,6 @@ struct Robot
                 reverseMotor.setSpeed(0);
         } while (forwardPulse < pulseToReach || reversePulse > -pulseToReach);
         
-        //Serial.println(pulseToReach);
-        //Serial.println(forwardPulse);
-        //Serial.println(reversePulse);
-
         forwardMotor.stop();
         reverseMotor.stop();
     }
@@ -115,9 +128,22 @@ struct Robot
         _pid.reset();
     }
 
-    void reset() {
+    Color readColor() {
+        return _colorSensor.read();
+    }
+
+    void initParts() {
         _leftMotor.resetEncoder();
         _rightMotor.resetEncoder();
+    }
+
+    void initSensors() {
+        _colorSensor.init();
+    }
+
+    void init() {
+        initParts();
+        initSensors();
     }
 
     void stop() {
