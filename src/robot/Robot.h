@@ -5,23 +5,40 @@
 #define ROBUS_A
 
 #include "Robot.Utils.h"
+
+#include "parts/Motor.h"
+#include "parts/Clamp.h"
+
+#include "sensors/ColorSensor.h"
+#include "sensors/DistanceSensor.h"
+#include "sensors/LineFollowerSensor.h"
+
 #include "PID.h"
-#include "Motor.h"
 
 struct Robot
 {
     Motor _leftMotor;
     Motor _rightMotor;
+    Clamp _clamp;
+
+    ColorSensor _colorSensor;
+    DistanceSensor _distanceSensor;
+    LineFollowerSensor _lineFollowerSensor;
+
     PID _pid;
     float _pidDelay;
 
     Robot() {
         _leftMotor = Motor(0);
         _rightMotor = Motor(1);
+        _clamp = Clamp(1);
 
-        _pidDelay = 500;
-
+        _colorSensor = ColorSensor();
+        _distanceSensor = DistanceSensor();
+        _lineFollowerSensor = LineFollowerSensor();
+        
         _pid = PID(_pidDelay, 0.1, 0.065);
+        _pidDelay = 500;
     }
 
     void rotate(float degree) {
@@ -66,10 +83,6 @@ struct Robot
                 reverseMotor.setSpeed(0);
         } while (forwardPulse < pulseToReach || reversePulse > -pulseToReach);
         
-        //Serial.println(pulseToReach);
-        //Serial.println(forwardPulse);
-        //Serial.println(reversePulse);
-
         forwardMotor.stop();
         reverseMotor.stop();
     }
@@ -115,43 +128,24 @@ struct Robot
         _pid.reset();
     }
 
-    void forward(float speed = DEFAULT_SPEED) {
-        _leftMotor.setSpeed(speed);
-        _rightMotor.setSpeed(speed);
-
-        int32_t leftPulse;
-        int32_t rightPulse;
-
-        unsigned currentMillis = millis();
-        unsigned previousMillis = 0;
-        do
-        {
-            leftPulse = _leftMotor.readEncoder();
-            rightPulse = _rightMotor.readEncoder();
-
-            currentMillis = millis();
-            if (currentMillis - previousMillis > _pidDelay) {
-                previousMillis = currentMillis;
-
-                #ifdef ROBUS_A
-                    float magic = _pid.Compute(rightPulse, leftPulse);
-                     _leftMotor.setSpeed(DEFAULT_SPEED + magic + 0.02);
-                #else
-                   float magic = _pid.Compute(leftPulse, rightPulse);
-                   _rightMotor.setSpeed(DEFAULT_SPEED + magic);
-                #endif
-            }
-        } while (!ROBUS_IsBumper(3));
-
-        _leftMotor.stop();
-        _rightMotor.stop();
-
-        _pid.reset();
+    Color readColor() {
+        return _colorSensor.read();
     }
 
-    void reset() {
+    void initParts() {
         _leftMotor.resetEncoder();
         _rightMotor.resetEncoder();
+
+        _clamp.init();
+    }
+
+    void initSensors() {
+        _colorSensor.init();
+    }
+
+    void init() {
+        initParts();
+        initSensors();
     }
 
     void stop() {

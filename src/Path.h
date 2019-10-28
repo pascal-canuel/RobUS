@@ -1,12 +1,12 @@
 #ifndef Path_H_
 #define Path_H_
 
-#include "Robot.h"
+#include "robot/Robot.h"
 
 enum State {
     MOVE,
     ROTATE,
-    TURN,
+    TURN
 };
 
 struct Step
