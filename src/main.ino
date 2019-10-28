@@ -25,6 +25,9 @@ void setup(){
 void loop() {
   Color color = robus.readColor();
   Serial.print("color: "); Serial.println(color);
+  
+  // robus.followLine();
 
   delay(2000);
 }
+

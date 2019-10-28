@@ -49,13 +49,13 @@ float _rgbToHue(Rgb rgb) {
 } 
 
 /*
-  Hue values range:
-  Orange  0 - 22
-  Yellow 22 - 38
-  Green 38 - 75
-  Blue 75 - 130
-  Violet 130 - 160
-  Red 160 - 179
+    Hue values range:
+    Orange  0 - 22
+    Yellow 22 - 38
+    Green 38 - 75
+    Blue 75 - 130
+    Violet 130 - 160
+    Red 160 - 179
 */
 Color _hueToColor(float hue) {
   if (22 < hue && hue <= 38)

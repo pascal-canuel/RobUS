@@ -116,9 +116,9 @@ struct Robot
                    float magic = _pid.Compute(leftPulse, rightPulse);
                    _rightMotor.setSpeed((DEFAULT_SPEED + magic) * direction);
                 #endif
-                //Serial.print(leftPulse);
-                //Serial.print(" | ");
-                //Serial.println(rightPulse);
+                //  Serial.print(leftPulse);
+                //  Serial.print(" | ");
+                //  Serial.println(rightPulse);
             }
         } while (leftPulse * direction <= pulseToReach && rightPulse * direction <= pulseToReach);
 
@@ -126,6 +126,27 @@ struct Robot
         _rightMotor.stop();
 
         _pid.reset();
+    }
+
+    /*
+        LEFT - CENTER - RIGHT
+        0      0        1     Adjust to the right
+        0      1        0     Ok
+        1      0        0     Adjust to the left
+        0      0        0     On a white space or color zone
+    */
+    void followLine() {
+        Sensors sensors = _lineFollowerSensor.read();
+        
+        if (!(sensors.leftVal && sensors.centerVal && sensors.rightVal)) {
+            // Todo
+        } else if (sensors.leftVal) {
+            // Todo
+        } else if (sensors.centerVal) {
+            // Todo
+        } else if (sensors.rightVal) {
+            // Todo
+        }
     }
 
     Color readColor() {
@@ -141,6 +162,8 @@ struct Robot
 
     void initSensors() {
         _colorSensor.init();
+
+        _lineFollowerSensor.init();
     }
 
     void init() {
