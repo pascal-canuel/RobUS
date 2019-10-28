@@ -31,7 +31,7 @@ struct Robot
     Robot() {
         _leftMotor = Motor(0);
         _rightMotor = Motor(1);
-        _clamp = Clamp();
+        _clamp = Clamp(1);
 
         _colorSensor = ColorSensor();
         _distanceSensor = DistanceSensor();
@@ -135,6 +135,8 @@ struct Robot
     void initParts() {
         _leftMotor.resetEncoder();
         _rightMotor.resetEncoder();
+
+        _clamp.init();
     }
 
     void initSensors() {
