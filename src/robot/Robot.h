@@ -5,15 +5,25 @@
 #define ROBUS_A
 
 #include "Robot.Utils.h"
-#include "PID.h"
+
 #include "parts/Motor.h"
+#include "parts/Clamp.h"
+
 #include "sensors/ColorSensor.h"
+#include "sensors/DistanceSensor.h"
+#include "sensors/LineFollowerSensor.h"
+
+#include "PID.h"
 
 struct Robot
 {
     Motor _leftMotor;
     Motor _rightMotor;
+    Clamp _clamp;
+
     ColorSensor _colorSensor;
+    DistanceSensor _distanceSensor;
+    LineFollowerSensor _lineFollowerSensor;
 
     PID _pid;
     float _pidDelay;
@@ -21,8 +31,12 @@ struct Robot
     Robot() {
         _leftMotor = Motor(0);
         _rightMotor = Motor(1);
-        _colorSensor = ColorSensor();
+        _clamp = Clamp();
 
+        _colorSensor = ColorSensor();
+        _distanceSensor = DistanceSensor();
+        _lineFollowerSensor = LineFollowerSensor();
+        
         _pid = PID(_pidDelay, 0.1, 0.065);
         _pidDelay = 500;
     }

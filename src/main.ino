@@ -23,7 +23,8 @@ void setup(){
 }
 
 void loop() {
-  Serial.print("color: "); Serial.println(robus.readColor());
+  Color color = robus.readColor();
+  Serial.print("color: "); Serial.println(color);
 
   delay(2000);
 }
