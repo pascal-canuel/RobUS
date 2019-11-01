@@ -11,16 +11,19 @@ enum Color {
   UNDEFINED
 };
 
-struct Rgb {
-  float red, green, blue;
-};
-
 // Rgb redRgb { 254, 0, 0 };
 // Rgb greenRgb { 0, 255, 0 };
 // Rgb blueRgb { 0, 0, 255 };
 // Rgb yellowRgb { 255, 255, 0 };
+struct Rgb {
+  float red, green, blue;
+};
 
-float _rgbToHue(Rgb rgb) {
+struct Hsv {
+  float hue, saturation, value;
+};
+
+Hsv _rgbToHsv(Rgb rgb) {
   float red = rgb.red / 255.;
   float green = rgb.green / 255.;
   float blue = rgb.blue / 255.;
@@ -45,33 +48,44 @@ float _rgbToHue(Rgb rgb) {
     }
   }
 
-  return hue / 2;
+  float saturation = 0;
+  if (cMax != 0) {
+    saturation = delta / cMax;
+  }
+
+  float value = cMax;
+  
+  return Hsv { hue / 2, saturation * 255, value * 255 };
 } 
 
 /*
     Hue values range:
     Orange  0 - 22
     Yellow 22 - 38
-    Green 38 - 75
-    Blue 75 - 130
+    Green 38 - 99
+    Blue 99 - 130
     Violet 130 - 160
     Red 160 - 179
 */
-Color _hueToColor(float hue) {
-  if (22 < hue && hue <= 38)
+Color _hsvToColor(Hsv hsv) {
+  // Serial.print("hue: "); Serial.println(hsv.hue);
+  // Serial.print("saturation: "); Serial.println(hsv.saturation);
+  // Serial.print("value: "); Serial.println(hsv.value);
+
+  if (22 < hsv.hue && hsv.hue <= 38)
     return YELLOW;
-  if (38 < hue && hue <= 75) 
+  if (38 < hsv.hue && hsv.hue <= 99) 
     return GREEN;
-  if (75 < hue && hue <= 130)
+  if (99 < hsv.hue && hsv.hue <= 130)
     return BLUE;
-  if ((0 <= hue && hue <= 22) || (160 < hue && hue <= 179))
+  if ((0 <= hsv.hue && hsv.hue <= 22) || (160 < hsv.hue && hsv.hue <= 179))
     return RED;
   
   return UNDEFINED;
 }
 
 Color rgbToColor(Rgb rgb) {
-  return _hueToColor(_rgbToHue(rgb));
+  return _hsvToColor(_rgbToHsv(rgb));
 }
 
 #endif

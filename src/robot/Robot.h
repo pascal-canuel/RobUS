@@ -137,16 +137,27 @@ struct Robot
     */
     void followLine() {
         Sensors sensors = _lineFollowerSensor.read();
-        
-        if (!(sensors.leftVal && sensors.centerVal && sensors.rightVal)) {
-            // Todo
-        } else if (sensors.leftVal) {
-            // Todo
-        } else if (sensors.centerVal) {
-            // Todo
-        } else if (sensors.rightVal) {
-            // Todo
+        Serial.print("left: "); Serial.println(sensors.leftVal);
+        Serial.print("center: "); Serial.println(sensors.centerVal);
+        Serial.print("right: "); Serial.println(sensors.rightVal);
+
+        float error = 0.02;
+
+        while (!(sensors.leftVal && sensors.centerVal && sensors.rightVal)) {
+            if (sensors.leftVal) {
+                _leftMotor.setSpeed(DEFAULT_SPEED);
+                _rightMotor.setSpeed(DEFAULT_SPEED + error);
+            } else if (sensors.centerVal) {
+                _leftMotor.setSpeed(DEFAULT_SPEED);
+                _rightMotor.setSpeed(DEFAULT_SPEED);
+            } else if (sensors.rightVal) {
+                _leftMotor.setSpeed(DEFAULT_SPEED + error);
+                _rightMotor.setSpeed(DEFAULT_SPEED);
+            }
         }
+        
+        _leftMotor.stop();
+        _rightMotor.stop();
     }
 
     Color readColor() {
