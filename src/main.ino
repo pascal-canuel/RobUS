@@ -28,6 +28,6 @@ void loop() {
   
   // robus.followLine();
 
-  delay(2000);
+  delay(500);
 }
 
