@@ -54,6 +54,9 @@ void captorCallback() {
   Serial.print("left: "); Serial.println(leftCaptorVal);
   Serial.print("center: "); Serial.println(centerCaptorVal);
   Serial.print("right: "); Serial.println(rightCaptorVal);
+  if(ROBUS_IsBumper(3))
+  followline(leftCaptorVal,centerCaptorVal,rightCaptorVal);
+
 }
 
 /*
@@ -61,16 +64,20 @@ void captorCallback() {
   0      0        1     Adjust to the right
   0      1        0     Ok
   1      0        0     Adjust to the left
-  1      1        1     Not on a line
+  0      0        0     color zone or white space
 */
 void followline(int leftVal, int centerVal, int rightVal) {
-  if (leftVal && centerVal && rightVal) {
-    // Todo
+  if ((!leftVal && !centerVal && !rightVal) ) {
+    // MOTOR_SetSpeed(1,0);
+    // MOTOR_SetSpeed(0,0);
   } else if (leftVal) {
-    // Todo
+    MOTOR_SetSpeed(1,0.32);
+    MOTOR_SetSpeed(0,0.3);
   } else if (centerVal) {
-    // Todo
+    MOTOR_SetSpeed(1,0.3);
+    MOTOR_SetSpeed(0,0.3);
   } else if (rightVal) {
-    // Todo
+    MOTOR_SetSpeed(1,0.3);
+    MOTOR_SetSpeed(0,0.32);
   }
 }
