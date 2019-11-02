@@ -15,19 +15,23 @@ Auteurs:
 
 Robot robus;
 
-int leftCaptorPin = 30;
-int centerCaptorPin = 32;
-int rightCaptorPin = 34;
+int leftCaptorPin = 40;
+int centerCaptorPin = 44;
+int rightCaptorPin = 42;
+int isbumper = 0;
+float vitesse1 = 0;
+float vitesse = 0;
 
 uint8_t captorCallbackId = 0;
-unsigned long captorCallbackDelay = 2000;
+unsigned long captorCallbackDelay = 100;
 
 void setup(){
   BoardInit();
-
+  SERVO_Enable(0);
+  SERVO_SetAngle(0,180);
   robus = Robot();
   robus.reset();
-
+  
   pinMode(leftCaptorPin, INPUT);
   pinMode(centerCaptorPin, INPUT);
   pinMode(rightCaptorPin, INPUT);
@@ -43,6 +47,8 @@ void loop() {
 }
 
 void captorCallback() {
+
+  
   /*
     0 = LOW
     1 = HIGH
@@ -55,7 +61,11 @@ void captorCallback() {
   Serial.print("center: "); Serial.println(centerCaptorVal);
   Serial.print("right: "); Serial.println(rightCaptorVal);
   if(ROBUS_IsBumper(3))
-  followline(leftCaptorVal,centerCaptorVal,rightCaptorVal);
+  isbumper = 1;
+  if(isbumper == 1)
+  {
+    followline(leftCaptorVal,centerCaptorVal,rightCaptorVal);
+  }
 
 }
 
@@ -67,17 +77,28 @@ void captorCallback() {
   0      0        0     color zone or white space
 */
 void followline(int leftVal, int centerVal, int rightVal) {
-  if ((!leftVal && !centerVal && !rightVal) ) {
+  
+  Serial.print("Leftval : ");Serial.print(leftVal);Serial.print("\tRightval : ");Serial.print(rightVal);;Serial.print("\tcenterval : ");Serial.println(centerVal);
+  //if ((!leftVal && !centerVal && !rightVal) ) {
     // MOTOR_SetSpeed(1,0);
     // MOTOR_SetSpeed(0,0);
-  } else if (leftVal) {
-    MOTOR_SetSpeed(1,0.32);
-    MOTOR_SetSpeed(0,0.3);
-  } else if (centerVal) {
-    MOTOR_SetSpeed(1,0.3);
-    MOTOR_SetSpeed(0,0.3);
-  } else if (rightVal) {
-    MOTOR_SetSpeed(1,0.3);
-    MOTOR_SetSpeed(0,0.32);
+  //} 
+  if (leftVal==1) {
+    Serial.println("Good if left");
+   vitesse = 0.2;
+   vitesse1 = 0.17;
+  } else if (centerVal==1) {
+    Serial.println("Good if center");
+   vitesse = 0.3;
+   vitesse1 = 0.3;
+  } else if (rightVal==1) {
+    Serial.println("Good if right");
+   vitesse = 0.17;
+   vitesse1 = 0.2;
   }
+
+  Serial.print("vitesse : ");Serial.print(vitesse);Serial.print("\tvitesse1 : ");Serial.println(vitesse1);
+  MOTOR_SetSpeed(1,vitesse);
+  MOTOR_SetSpeed(0,vitesse1);
+  
 }
