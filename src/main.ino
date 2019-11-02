@@ -23,22 +23,23 @@ void setup()
 
 void loop()
 {
-  int startUp = 0;
   SERVO_Enable(0);
   SERVO_SetAngle(0, 180);
   
-  while (startUp = 1){
-    checkBall(0);
-    
-
-  }
 
   if (ROBUS_IsBumper(3)) {
-    startUp = 1;
-  }
+    MOTOR_SetSpeed(0,0.3);
+    MOTOR_SetSpeed(1,0.3);
+  } 
+  checkBall(0);
+
+}
+void callCheckBall(int startUp){
+
 }
 
 void checkBall(int sensorPin){
+  Serial.println("1");
   bool verifBallon = false;
   int limiteMax = 21;
   int limiteMin = 13;
@@ -46,7 +47,7 @@ void checkBall(int sensorPin){
   verifBallon = Detection(limiteMax ,limiteMin, sensorPin); 
   if(verifBallon==true)
   {
-    Serial.println("pas de ballon");
+    Serial.println("Pas de ballon");
   }
   else
   { 
