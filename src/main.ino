@@ -8,7 +8,11 @@ Date: Derniere date de modification
 
 #include "Path.h"
 #include "math.h"
+#include "Robot.h"
 
+Robot robus;
+Path path;
+int length;
 
 bool Detection(int,int,int);
 
@@ -19,12 +23,27 @@ void setup()
 
 void loop()
 {
+  int startUp = 0;
+  SERVO_Enable(0);
+  SERVO_SetAngle(0, 180);
   
-  int sensorPin = 0;
+  while (startUp = 1){
+    checkBall(0);
+    
+
+  }
+
+  if (ROBUS_IsBumper(3)) {
+    startUp = 1;
+  }
+}
+
+void checkBall(int sensorPin){
   bool verifBallon = false;
   int limiteMax = 21;
   int limiteMin = 13;
-  verifBallon = Detection(limiteMax ,limiteMin, sensorPin);  
+
+  verifBallon = Detection(limiteMax ,limiteMin, sensorPin); 
   if(verifBallon==true)
   {
     Serial.println("pas de ballon");
@@ -36,10 +55,10 @@ void loop()
     verifBallon = Detection(limiteMax,limiteMin,sensorPin);
     if(verifBallon == true)
     {
+      SERVO_SetAngle(0,130);
       Serial.println("Ballon");
     }
   }
- 
   delay(500);
 }
 
@@ -50,7 +69,7 @@ bool Detection(int limiteMax, int limiteMin,int sensorPin)
 
   val = analogRead(sensorPin);
   distance = (7960.9*pow(val,-1.094));
-  Serial.println(distance);
+  Serial.println(val);
 
   if(distance<limiteMax && distance>limiteMin)
     return true;
