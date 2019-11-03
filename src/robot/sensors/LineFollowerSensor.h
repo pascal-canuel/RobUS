@@ -13,9 +13,9 @@ struct Sensors {
 
 struct LineFollowerSensor
 {
-    int leftSensorPin = 30;
-    int centerSensorPin = 32;
-    int rightSensorPin = 34;
+    int leftSensorPin = 38;
+    int centerSensorPin = 40;
+    int rightSensorPin = 42;
 
     LineFollowerSensor() {}
 

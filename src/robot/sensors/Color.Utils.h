@@ -58,12 +58,16 @@ Hsv _rgbToHsv(Rgb rgb) {
   return Hsv { hue / 2, saturation * 255, value * 255 };
 } 
 
+/* TODO
+  - change UNDEFINED by white
+  - add black
+*/
 /*
     Hue values range:
     Orange  0 - 22
-    Yellow 22 - 38
-    Green 38 - 99
-    Blue 99 - 130
+    Yellow 22 - 38 *15-38*
+    Green 38 - 99 *60-70*
+    Blue 99 - 130 *70-80*
     Violet 130 - 160
     Red 160 - 179
 */
@@ -72,13 +76,13 @@ Color _hsvToColor(Hsv hsv) {
   // Serial.print("saturation: "); Serial.println(hsv.saturation);
   // Serial.print("value: "); Serial.println(hsv.value);
 
-  if (22 < hsv.hue && hsv.hue <= 38)
+  if (15 < hsv.hue && hsv.hue <= 38 && hsv.saturation > 100)
     return YELLOW;
-  if (38 < hsv.hue && hsv.hue <= 99) 
+  if (38 < hsv.hue && hsv.hue <= 70) 
     return GREEN;
-  if (99 < hsv.hue && hsv.hue <= 130)
+  if (70 < hsv.hue && hsv.hue <= 130)
     return BLUE;
-  if ((0 <= hsv.hue && hsv.hue <= 22) || (160 < hsv.hue && hsv.hue <= 179))
+  if ((0 <= hsv.hue && hsv.hue <= 15) || (160 < hsv.hue && hsv.hue <= 179))
     return RED;
   
   return UNDEFINED;

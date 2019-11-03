@@ -22,7 +22,7 @@ struct Clamp
     }
 
     void close() {
-        SERVO_SetAngle(_clampId, 130);
+        SERVO_SetAngle(_clampId, 125);
     }
 };
 

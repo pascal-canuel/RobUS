@@ -2,7 +2,7 @@
 #define Robot_H_
 
 /* comment to compile for robus b */
-#define ROBUS_A
+// #define ROBUS_A
 
 #include "Robot.Utils.h"
 
@@ -37,8 +37,8 @@ struct Robot
         _distanceSensor = DistanceSensor();
         _lineFollowerSensor = LineFollowerSensor();
         
-        _pid = PID(_pidDelay, 0.1, 0.065);
         _pidDelay = 500;
+        _pid = PID(_pidDelay, 0.1, 0.065); // change values
     }
 
     void rotate(float degree) {
@@ -128,6 +128,55 @@ struct Robot
         _pid.reset();
     }
 
+    void moveBreak(float distance) {
+        float pulseToReach = convertDistanceToPulse(distance);
+        int direction = 1;
+        if (distance < 0)
+            direction = -1;
+
+        int32_t leftPulse;
+        int32_t rightPulse;
+        _leftMotor.setSpeed(DEFAULT_SPEED * direction);
+        _rightMotor.setSpeed(DEFAULT_SPEED * direction);
+
+        unsigned currentMillis = millis();
+        unsigned previousMillis = 0;
+        do
+        {
+            leftPulse = _leftMotor.readEncoder();
+            rightPulse = _rightMotor.readEncoder();
+
+            currentMillis = millis();
+            if (currentMillis - previousMillis > _pidDelay) {
+                previousMillis = currentMillis;
+
+                #ifdef ROBUS_A
+                    float magic = _pid.Compute(rightPulse, leftPulse);
+                     _leftMotor.setSpeed((DEFAULT_SPEED + magic + 0.02) * direction);
+                #else
+                   float magic = _pid.Compute(leftPulse, rightPulse);
+                   _rightMotor.setSpeed((DEFAULT_SPEED + magic) * direction);
+                #endif
+                //  Serial.print(leftPulse);
+                //  Serial.print(" | ");
+                //  Serial.println(rightPulse);
+
+                Sensors sensors = _lineFollowerSensor.read();
+                if (sensors.leftVal && sensors.centerVal && sensors.rightVal) 
+                    return;
+            }
+        } while (leftPulse * direction <= pulseToReach && rightPulse * direction <= pulseToReach);
+
+        _leftMotor.stop();
+        _rightMotor.stop();
+
+        _pid.reset();
+    }
+
+    Color readColor() {
+        return _colorSensor.read();
+    }
+
     /*
         LEFT - CENTER - RIGHT
         0      0        1     Adjust to the right
@@ -141,9 +190,18 @@ struct Robot
         Serial.print("center: "); Serial.println(sensors.centerVal);
         Serial.print("right: "); Serial.println(sensors.rightVal);
 
-        float error = 0.02;
+        float error = 0.03;
 
-        while (!(sensors.leftVal && sensors.centerVal && sensors.rightVal)) {
+        Color color = readColor();
+        Serial.print("init color: "); Serial.println(color);
+        unsigned currentMillis = millis();
+        unsigned initMillis = currentMillis;
+        unsigned previousMillis = 0;
+
+        _leftMotor.setSpeed(DEFAULT_SPEED);
+        _rightMotor.setSpeed(DEFAULT_SPEED);
+
+        while (color == UNDEFINED) {
             if (sensors.leftVal) {
                 _leftMotor.setSpeed(DEFAULT_SPEED);
                 _rightMotor.setSpeed(DEFAULT_SPEED + error);
@@ -154,14 +212,33 @@ struct Robot
                 _leftMotor.setSpeed(DEFAULT_SPEED + error);
                 _rightMotor.setSpeed(DEFAULT_SPEED);
             }
+
+            currentMillis = millis();
+
+            if (currentMillis - previousMillis > 50) {
+                 previousMillis = currentMillis;
+                 color = readColor();
+                 Serial.print("caliss: "); Serial.println(color);
+             }
+             unsigned diffMillis = currentMillis - initMillis;
+             Serial.print("diff millis: "); Serial.println(currentMillis - initMillis);
+            if (!(sensors.leftVal && sensors.centerVal && sensors.rightVal) && diffMillis > 1000) {
+                Serial.println("TBK");
+                Serial.println(currentMillis);
+                _leftMotor.stop();
+                _rightMotor.stop();
+                delay(100);
+                color = readColor();
+                if (color == UNDEFINED) {
+                    _leftMotor.setSpeed(DEFAULT_SPEED);
+                    _rightMotor.setSpeed(DEFAULT_SPEED);
+                }
+                Serial.print("sir path: "); Serial.println(color);
+            }
         }
         
         _leftMotor.stop();
         _rightMotor.stop();
-    }
-
-    Color readColor() {
-        return _colorSensor.read();
     }
 
     void initParts() {
@@ -169,6 +246,14 @@ struct Robot
         _rightMotor.resetEncoder();
 
         _clamp.init();
+    }
+
+    void closeClamp() {
+        _clamp.close();
+    }
+
+    void openClamp() {
+        _clamp.open();
     }
 
     void initSensors() {
