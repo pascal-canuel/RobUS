@@ -1,58 +1,4 @@
 /*
-<<<<<<< HEAD
-Projet: Le nom du script
-Equipe: Votre numero d'equipe
-Auteurs: Les membres auteurs du script
-Description: Breve description du script
-Date: Derniere date de modification
-*/
-
-/* ****************************************************************************
-Inclure les librairies de functions que vous voulez utiliser
-**************************************************************************** */
-
-#include <LibRobus.h> // Essentielle pour utiliser RobUS
-
-
-
-/* ****************************************************************************
-Variables globales et defines
-**************************************************************************** */
-// -> defines...
-// L'ensemble des fonctions y ont acces
-
-
-
-/* ****************************************************************************
-Vos propres fonctions sont creees ici
-**************************************************************************** */
-void maFonction(){
-  // code
-}
-
-
-/* ****************************************************************************
-Fonctions d'initialisation (setup)
-**************************************************************************** */
-// -> Se fait appeler au debut du programme
-// -> Se fait appeler seulement un fois
-// -> Generalement on y initilise les varibbles globales
-
-void setup(){
-  BoardInit();
-}
-
-
-/* ****************************************************************************
-Fonctions de boucle infini (loop())
-**************************************************************************** */
-// -> Se fait appeler perpetuellement suite au "setup"
-
-void loop() {
-  // SOFT_TIMER_Update(); // A decommenter pour utiliser des compteurs logiciels
-  delay(10);// Delais pour décharger le CPU
-}
-=======
 Projet: Parcours du combattant
 Equipe: Les 100 ID
 Auteurs: 
@@ -109,8 +55,32 @@ void loop() {
   // if (ROBUS_IsBumper(3)) {
   //  robus.followLine();
   // }
+  int step_Path = 0;
+  char color_TO[10] = "BLUE";
+  Color color;
+  LineFollowerSensor linefollowsensor;
 
-  delay(500);
+  if (step_Path == 0)
+  {
+    robus.rotate(-90);
+    step_Path++;
+  }
+  if(step_Path == 1)
+  {
+    MOTOR_SetSpeed(1,0.3);
+    MOTOR_SetSpeed(0,0.3);
+    step_Path++;
+  }
+
+  linefollowsensor.read();
+  linefollowsensor.followline(color_TO);
+  
+  
+  
+  
+
+
+
+  delay(100);
 }
 
->>>>>>> 1193135fc98d94483b4ed1388d5fc8e7ce2e04e0
