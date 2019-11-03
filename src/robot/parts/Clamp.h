@@ -22,7 +22,11 @@ struct Clamp
     }
 
     void close() {
-        SERVO_SetAngle(_clampId, 125);
+        #ifdef ROBUS_A
+            SERVO_SetAngle(_clampId, 90);
+        #else
+            SERVO_SetAngle(_clampId, 125);
+        #endif
     }
 };
 

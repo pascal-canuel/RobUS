@@ -2,7 +2,7 @@
 #define Robot_H_
 
 /* comment to compile for robus b */
-#define ROBUS_A
+// #define ROBUS_A
 
 #include "Robot.Utils.h"
 
@@ -88,11 +88,16 @@ struct Robot
     }
 
     void move(float distance) {
+        delay(200);
+        
         float pulseToReach = convertDistanceToPulse(distance);
         int direction = 1;
         if (distance < 0)
             direction = -1;
 
+        _leftMotor.resetEncoder();
+        _rightMotor.resetEncoder();
+        
         int32_t leftPulse;
         int32_t rightPulse;
         _leftMotor.setSpeed(DEFAULT_SPEED * direction);
@@ -116,9 +121,9 @@ struct Robot
                    float magic = _pid.Compute(leftPulse, rightPulse);
                    _rightMotor.setSpeed((DEFAULT_SPEED + magic) * direction);
                 #endif
-                Serial.print(leftPulse);
-                Serial.print(" | ");
-                Serial.println(rightPulse);
+                // Serial.print(leftPulse);
+                // Serial.print(" | ");
+                // Serial.println(rightPulse);
             }
         } while (leftPulse * direction <= pulseToReach && rightPulse * direction <= pulseToReach);
 
@@ -126,6 +131,109 @@ struct Robot
         _rightMotor.stop();
 
         _pid.reset();
+    }
+
+    void forwardBall() {
+        delay(200);
+        
+        _leftMotor.resetEncoder();
+        _rightMotor.resetEncoder();
+        
+        int32_t leftPulse;
+        int32_t rightPulse;
+        _leftMotor.setSpeed(DEFAULT_SPEED);
+        _rightMotor.setSpeed(DEFAULT_SPEED);
+
+        unsigned currentMillis = millis();
+        unsigned previousMillis = 0;
+        do
+        {
+            leftPulse = _leftMotor.readEncoder();
+            rightPulse = _rightMotor.readEncoder();
+
+            currentMillis = millis();
+            if (currentMillis - previousMillis > _pidDelay) {
+                previousMillis = currentMillis;
+
+                #ifdef ROBUS_A
+                    float magic = _pid.Compute(rightPulse, leftPulse);
+                     _leftMotor.setSpeed((DEFAULT_SPEED + magic + 0.02));
+                #else
+                   float magic = _pid.Compute(leftPulse, rightPulse);
+                   _rightMotor.setSpeed((DEFAULT_SPEED + magic));
+                #endif
+                // Serial.print(leftPulse);
+                // Serial.print(" | ");
+                // Serial.println(rightPulse);
+            }
+        } while(!Detection(13, 6));
+
+        _pid.reset();
+
+        delay(100);
+        stop();
+        closeClamp();
+    }
+
+    void forwardCenter() {
+        delay(200);
+        
+        _leftMotor.resetEncoder();
+        _rightMotor.resetEncoder();
+        
+        int32_t leftPulse;
+        int32_t rightPulse;
+        _leftMotor.setSpeed(DEFAULT_SPEED);
+        _rightMotor.setSpeed(DEFAULT_SPEED);
+
+        Sensors sensors = { 0, 0, 0 };
+
+        unsigned currentMillis = millis();
+        unsigned previousMillis = 0;
+        do
+        {
+            leftPulse = _leftMotor.readEncoder();
+            rightPulse = _rightMotor.readEncoder();
+
+            currentMillis = millis();
+            if (currentMillis - previousMillis > _pidDelay) {
+                previousMillis = currentMillis;
+
+                #ifdef ROBUS_A
+                    float magic = _pid.Compute(rightPulse, leftPulse);
+                     _leftMotor.setSpeed((DEFAULT_SPEED + magic + 0.02));
+                #else
+                   float magic = _pid.Compute(leftPulse, rightPulse);
+                   _rightMotor.setSpeed((DEFAULT_SPEED + magic));
+                #endif
+                // Serial.print(leftPulse);
+                // Serial.print(" | ");
+                // Serial.println(rightPulse);
+            }
+            sensors = _lineFollowerSensor.read();
+        } while(!(sensors.leftVal && sensors.centerVal && sensors.rightVal));
+
+        _pid.reset();
+
+        delay(100);
+        stop();
+        delay(500);
+        openClamp();
+    }
+
+    bool Detection(int limiteMax, int limiteMin)
+    {
+        int val = 0;
+        int distance = 0;
+
+        val = analogRead(0);
+        distance = (7960.9*pow(val,-1.094));
+
+        Serial.println(distance);
+        if(distance<limiteMax && distance>limiteMin)
+            return true;
+        else
+            return false;
     }
 
     void moveBreak(float distance) {

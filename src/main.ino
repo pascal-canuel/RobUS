@@ -38,37 +38,62 @@ void loop() {
       Robus B - get the ball in the middle and place it on a color zone
     */
     #ifdef ROBUS_A
-      // 1. Go on a line and move to a color zone 
-      robus.move(300);
-      // 2. When on a color zone calculate fastest path to the given color zone
-      // 3. Go in the middle
-      // 4. Leave the ball there
-      // 5. Move back as not to block the Robus B who takes the ball
+      Color target = RED;
+      switch (target) {
+          case BLUE:
+              robus.turn(-90);
+              robus.move(38);
+              robus.turn(-45);
+              takeAndReturn();
+              break;
+          case YELLOW:
+              robus.turn(90);
+              robus.move(38);
+              robus.turn(45);
+              takeAndReturn();
+              break;
+          case GREEN:
+              robus.turn(-90);
+              robus.move(38);
+              robus.turn(90);
+              robus.move(74);
+              robus.turn(-45);
+              takeAndReturn();
+              break;
+          case RED:
+              robus.turn(90);
+              robus.move(38);
+              robus.turn(-90);
+              robus.move(80); //
+              robus.turn(45);
+              takeAndReturn();
+              break;
+      }
     #else
-      robus.move(300);
-      // 2. Grab the ball
-      // 2. Go on a line and move to a color zone 
-      // 3. When on a color zone calculate fastest path to the given color zone
-      // 4. Go in the given color zone
-      // 5. Leave the ball there
+      Color target = RED;
+      robus.forwardBall(); // move back
+      robus.move(-20);
+      switch (target) {
+          case BLUE:
+              break;
+          case YELLOW:
+              break;
+          case GREEN:
+              break;
+          case RED:
+              break;
+      }
     #endif
   }
 
   delay(100);
 }
 
-bool Detection(int limiteMax, int limiteMin,int sensorPin)
-{
-  int val = 0;
-  int distance = 0;
-
-  val = analogRead(sensorPin);
-  distance = (7960.9*pow(val,-1.094));
-  Serial.println(val);
-
-  if(distance<limiteMax && distance>limiteMin)
-    return true;
-  else
-    return false;
+void takeAndReturn() {
+    robus.forwardBall();
+    robus.move(-10);
+    robus.turn(180);
+    robus.forwardCenter();
+    robus.move(-50);
 }
 
