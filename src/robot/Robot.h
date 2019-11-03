@@ -2,7 +2,7 @@
 #define Robot_H_
 
 /* comment to compile for robus b */
-#define ROBUS_A
+// #define ROBUS_A
 
 #include "Robot.Utils.h"
 
@@ -37,8 +37,8 @@ struct Robot
         _distanceSensor = DistanceSensor();
         _lineFollowerSensor = LineFollowerSensor();
         
-        _pidDelay = 500;
-        _pid = PID(_pidDelay, 0.1, 0.065); // change values
+        _pidDelay = 100;
+        _pid = PID(_pidDelay, 0.15, 0.00); // change values
     }
 
     void rotate(float degree) {
@@ -116,9 +116,9 @@ struct Robot
                    float magic = _pid.Compute(leftPulse, rightPulse);
                    _rightMotor.setSpeed((DEFAULT_SPEED + magic) * direction);
                 #endif
-                //  Serial.print(leftPulse);
-                //  Serial.print(" | ");
-                //  Serial.println(rightPulse);
+                Serial.print(leftPulse);
+                Serial.print(" | ");
+                Serial.println(rightPulse);
             }
         } while (leftPulse * direction <= pulseToReach && rightPulse * direction <= pulseToReach);
 
