@@ -14,8 +14,9 @@ struct Sensors {
 struct LineFollowerSensor
 {
     int leftSensorPin = 38;
-    int centerSensorPin = 42;
-    int rightSensorPin = 40;
+    int centerSensorPin = 40;
+    int rightSensorPin = 42;
+   
 
     LineFollowerSensor() {}
 
@@ -36,34 +37,39 @@ struct LineFollowerSensor
 
         return Sensors { leftSensorVal, centerSensorVal, rightSensorVal };
     }
-    void followline(char color_To)
+    void followline(Color color_To, Color color)
     {
-        Sensors sensors;
-        leftval = sensors.leftval;
-        centerval = sensors.centerVal;
-        rightval = sensors.rightval;
-        Serial.print("Leftval : ");Serial.print(leftVal);Serial.print("\tRightval : ");Serial.print(rightVal);;Serial.print("\tcenterval : ");Serial.println(centerVal);
-        if (!leftVal && !centerVal && !rightVal && color_To == robus.readColor()) {
+        Sensors sensors = read();
+
+        int _leftVal = sensors.leftVal;
+        int _centerVal = sensors.centerVal;
+        int _rightVal = sensors.rightVal;
+
+        Serial.print("Leftval : ");Serial.print(_leftVal);Serial.print("\tRightval : ");Serial.print(_rightVal);;Serial.print("\tcenterval : ");Serial.println(_centerVal);
+        if (!_leftVal && !_centerVal && !_rightVal && color_To == color) {
+       
         MOTOR_SetSpeed(1,0); 
         MOTOR_SetSpeed(0,0);
         }
-        if (leftVal==1) { 
+        if (_leftVal==1) { 
         Serial.println("Good if left");
-        vitesse = 0.2;
-        vitesse1 = 0.17;
-        } else if (centerVal==1) {
+        
+        MOTOR_SetSpeed(1,0.25);
+        MOTOR_SetSpeed(0,0.15);
+        } else if (_centerVal==1) {
         Serial.println("Good if center");
-        vitesse = 0.3;
-        vitesse1 = 0.3;
-        } else if (rightVal==1) {
+       
+        MOTOR_SetSpeed(1,0.3);
+        MOTOR_SetSpeed(0,0.3);
+        } else if (_rightVal==1) {
         Serial.println("Good if right");
-        vitesse = 0.17;
-        vitesse1 = 0.2;
+       
+        MOTOR_SetSpeed(1,0.15);
+        MOTOR_SetSpeed(0,0.25);
         }
 
-        Serial.print("vitesse : ");Serial.print(vitesse);Serial.print("\tvitesse1 : ");Serial.println(vitesse1);
-        MOTOR_SetSpeed(1,vitesse);
-        MOTOR_SetSpeed(0,vitesse1);
+       
+       
     }
 };
 

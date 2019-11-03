@@ -14,6 +14,7 @@ Auteurs:
 #include "robot/Robot.h"
 
 Robot robus;
+int step_Path = 0;
 
 void setup(){
   BoardInit();
@@ -55,25 +56,30 @@ void loop() {
   // if (ROBUS_IsBumper(3)) {
   //  robus.followLine();
   // }
-  int step_Path = 0;
-  char color_TO[10] = "BLUE";
+  
   Color color;
   LineFollowerSensor linefollowsensor;
+  Color color_To = BLUE;
 
-  if (step_Path == 0)
-  {
-    robus.rotate(-90);
-    step_Path++;
-  }
+
+  color = robus.readColor();
+  Serial.println(step_Path);
+  if(step_Path == 2)
+  linefollowsensor.followline(color_To, color);
+  
   if(step_Path == 1)
   {
     MOTOR_SetSpeed(1,0.3);
     MOTOR_SetSpeed(0,0.3);
     step_Path++;
   }
+  if (step_Path == 0)
+  {
+    robus.rotate(-90);
+    step_Path++;
+  }
+  
 
-  linefollowsensor.read();
-  linefollowsensor.followline(color_TO);
   
   
   
