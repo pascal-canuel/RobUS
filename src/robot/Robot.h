@@ -88,7 +88,7 @@ struct Robot
     }
 
     void move(float distance) {
-        delay(200);
+        delay(1000);
         
         float pulseToReach = convertDistanceToPulse(distance);
         int direction = 1;
@@ -134,7 +134,7 @@ struct Robot
     }
 
     void forwardBall() {
-        delay(200);
+        delay(300);
         
         _leftMotor.resetEncoder();
         _rightMotor.resetEncoder();
@@ -170,13 +170,13 @@ struct Robot
 
         _pid.reset();
 
-        delay(100);
+        delay(125);
         stop();
         closeClamp();
     }
 
     void forwardCenter() {
-        delay(200);
+        delay(300);
         
         _leftMotor.resetEncoder();
         _rightMotor.resetEncoder();

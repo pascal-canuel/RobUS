@@ -38,7 +38,7 @@ void loop() {
       Robus B - get the ball in the middle and place it on a color zone
     */
     #ifdef ROBUS_A
-      Color target = RED;
+      Color target = YELLOW;
       switch (target) {
           case BLUE:
               robus.turn(-90);
@@ -63,7 +63,7 @@ void loop() {
               robus.forwardBall();
               robus.move(-10);
               robus.turn(-135);
-              robus.move(60); //
+              robus.move(70);
               robus.turn(-90);
               putBallCenter();
               break;
@@ -76,7 +76,7 @@ void loop() {
               robus.forwardBall();
               robus.move(-10);
               robus.turn(135);
-              robus.move(65); //
+              robus.move(70);
               robus.turn(90);
               putBallCenter();
               break;
@@ -113,7 +113,7 @@ void returnBall() {
 }
 
 void putBallCenter() {
-  robus.move(80);
+  robus.move(65);
   delay(500);
   robus.openClamp();
   robus.move(-50);
