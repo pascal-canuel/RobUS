@@ -39,6 +39,62 @@ void loop() {
     */
     #ifdef ROBUS_A
       // 1. Go on a line and move to a color zone 
+      Color target = BLUE;
+      switch(target) {
+        case BLUE:
+          robus.turn(-90);
+          robus.move(29);
+          robus.turn(-45);
+          robus.move(79);
+      int sensorPin = 0;
+
+// first check is shit
+      bool verifBallon = false;
+      int limiteMax = 9;
+      int limiteMin = 5;
+
+      Serial.println("wtf");
+      robus._leftMotor.setSpeed(0.15);
+      robus._rightMotor.setSpeed(0.15);
+      while (verifBallon == false) {
+        Serial.println(verifBallon);
+        verifBallon = Detection(limiteMax ,limiteMin, sensorPin); 
+        if(verifBallon==true)
+        {
+            delay(100);
+
+            robus.closeClamp();
+            robus._leftMotor.stop();
+            robus._rightMotor.stop();
+        }
+      }
+          break;
+        case YELLOW:
+          break;
+        case RED:
+          break;
+        case GREEN:
+          break;
+      }
+      // 29
+      // switch (target)
+      // ​{
+      //     case YELLOW:
+      //       // statements
+      //       break;
+      //     case BLUE:
+      //       // statements
+      //       break;
+      //     case GREEN:
+      //       break;
+      //     case RED:
+      //       break;
+      //     default:
+      //       // default statements
+      // }
+      robus.turn(180);
+      robus.moveBreak(27);
+      robus.followLine();
       // 2. When on a color zone calculate fastest path to the given color zone
       // 3. Go in the middle
       // 4. Leave the ball there
