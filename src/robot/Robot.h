@@ -2,7 +2,7 @@
 #define Robot_H_
 
 /* comment to compile for robus b */
-// #define ROBUS_A
+#define ROBUS_A
 
 #include "Robot.Utils.h"
 
@@ -215,7 +215,7 @@ struct Robot
 
         _pid.reset();
 
-        delay(100);
+        delay(50);
         stop();
         delay(500);
         openClamp();

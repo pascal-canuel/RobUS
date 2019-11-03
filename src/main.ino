@@ -44,35 +44,47 @@ void loop() {
               robus.turn(-90);
               robus.move(38);
               robus.turn(-45);
-              takeAndReturn();
+              takeBall();
+              returnBall();
               break;
           case YELLOW:
               robus.turn(90);
               robus.move(38);
               robus.turn(45);
-              takeAndReturn();
+              takeBall();
+              returnBall();
               break;
           case GREEN:
               robus.turn(-90);
               robus.move(38);
               robus.turn(90);
-              robus.move(74);
+              robus.move(74); //
               robus.turn(-45);
-              takeAndReturn();
+              robus.forwardBall();
+              robus.move(-10);
+              robus.turn(-135);
+              robus.move(60); //
+              robus.turn(-90);
+              putBallCenter();
               break;
           case RED:
               robus.turn(90);
               robus.move(38);
               robus.turn(-90);
-              robus.move(80); //
+              robus.move(84); //
               robus.turn(45);
-              takeAndReturn();
+              robus.forwardBall();
+              robus.move(-10);
+              robus.turn(135);
+              robus.move(65); //
+              robus.turn(90);
+              putBallCenter();
               break;
       }
     #else
       Color target = RED;
-      robus.forwardBall(); // move back
-      robus.move(-20);
+      robus.forwardBall(); // int pulses = robus.forwardBall();
+      robus.move(-20); // move back the previous forward distance
       switch (target) {
           case BLUE:
               break;
@@ -89,11 +101,20 @@ void loop() {
   delay(100);
 }
 
-void takeAndReturn() {
+void takeBall() {
     robus.forwardBall();
     robus.move(-10);
     robus.turn(180);
+}
+
+void returnBall() {
     robus.forwardCenter();
     robus.move(-50);
 }
 
+void putBallCenter() {
+  robus.move(80);
+  delay(500);
+  robus.openClamp();
+  robus.move(-50);
+}
