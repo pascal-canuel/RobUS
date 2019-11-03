@@ -39,71 +39,13 @@ void loop() {
     */
     #ifdef ROBUS_A
       // 1. Go on a line and move to a color zone 
-      // 29
-      // switch (target)
-      // ​{
-      //     case YELLOW:
-      //       // statements
-      //       break;
-      //     case BLUE:
-      //       // statements
-      //       break;
-      //     case GREEN:
-      //       break;
-      //     case RED:
-      //       break;
-      //     default:
-      //       // default statements
-      // }
-      robus.turn(180);
-      robus.moveBreak(27);
-      robus.followLine();
+      robus.move(300);
       // 2. When on a color zone calculate fastest path to the given color zone
       // 3. Go in the middle
       // 4. Leave the ball there
       // 5. Move back as not to block the Robus B who takes the ball
     #else
-      // 1. Move forward to get ball in the middle
-      Color target = BLUE;
-      switch(target) {
-        case BLUE:
-          robus.turn(-90);
-          robus.move(31);
-          robus.turn(-45);
-          robus.move(79);
-          
-          robus.move(-10);
-          robus.turn(180);
-          robus.move(70);
-          int sensorPin = 0;
-
-          bool verifBallon = false;
-          int limiteMax = 9;
-          int limiteMin = 5;
-
-          Serial.println("wtf");
-          robus._leftMotor.setSpeed(0.15);
-          robus._rightMotor.setSpeed(0.15);
-          while (verifBallon == false) {
-            Serial.println(verifBallon);
-            verifBallon = Detection(limiteMax ,limiteMin, sensorPin); 
-            if(verifBallon==true)
-            {
-                delay(100);
-
-                robus.closeClamp();
-                robus._leftMotor.stop();
-                robus._rightMotor.stop();
-            }
-          }
-          break;
-        case YELLOW:
-          break;
-        case RED:
-          break;
-        case GREEN:
-          break;
-      }
+      robus.move(300);
       // 2. Grab the ball
       // 2. Go on a line and move to a color zone 
       // 3. When on a color zone calculate fastest path to the given color zone

@@ -2,7 +2,7 @@
 #define Robot_H_
 
 /* comment to compile for robus b */
-// #define ROBUS_A
+#define ROBUS_A
 
 #include "Robot.Utils.h"
 
@@ -38,7 +38,7 @@ struct Robot
         _lineFollowerSensor = LineFollowerSensor();
         
         _pidDelay = 100;
-        _pid = PID(_pidDelay, 0.15, 0.00); // change values
+        _pid = PID(_pidDelay, 0.15, 0.05); // change values
     }
 
     void rotate(float degree) {
