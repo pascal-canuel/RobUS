@@ -22,11 +22,11 @@ struct Clamp
     }
 
     void close() {
-        #ifdef ROBUS_A
-            SERVO_SetAngle(_clampId, 90);
-        #else
-            SERVO_SetAngle(_clampId, 125);
-        #endif
+#if __ROBUS__ == ROBUS_A
+        SERVO_SetAngle(_clampId, 90);
+#elif __ROBUS__ == ROBUS_B
+        SERVO_SetAngle(_clampId, 125);
+#endif
     }
 };
 

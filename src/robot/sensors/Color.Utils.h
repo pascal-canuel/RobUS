@@ -59,8 +59,8 @@ Hsv _rgbToHsv(Rgb rgb) {
 } 
 
 /* TODO
-  - change UNDEFINED by white
-  - add black
+  - change UNDEFINED -> WHITE
+  - add BLACK
 */
 /*
     Hue values range:

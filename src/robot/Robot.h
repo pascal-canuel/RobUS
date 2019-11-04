@@ -1,9 +1,6 @@
 #ifndef Robot_H_
 #define Robot_H_
 
-/* comment to compile for robus b */
-#define ROBUS_A
-
 #include "Robot.Utils.h"
 
 #include "parts/Motor.h"
@@ -38,7 +35,7 @@ struct Robot
         _lineFollowerSensor = LineFollowerSensor();
         
         _pidDelay = 100;
-        _pid = PID(_pidDelay, 0.15, 0.05); // change values
+        _pid = PID(_pidDelay, 0.15, 0.05);
     }
 
     void rotate(float degree) {
@@ -113,14 +110,13 @@ struct Robot
             currentMillis = millis();
             if (currentMillis - previousMillis > _pidDelay) {
                 previousMillis = currentMillis;
-
-                #ifdef ROBUS_A
+#if __ROBUS__ == ROBUS_A
                     float magic = _pid.Compute(rightPulse, leftPulse);
                      _leftMotor.setSpeed((DEFAULT_SPEED + magic + 0.02) * direction);
-                #else
+#elif __ROBUS__ == ROBUS_B
                    float magic = _pid.Compute(leftPulse, rightPulse);
                    _rightMotor.setSpeed((DEFAULT_SPEED + magic) * direction);
-                #endif
+#endif
                 // Serial.print(leftPulse);
                 // Serial.print(" | ");
                 // Serial.println(rightPulse);
@@ -155,13 +151,13 @@ struct Robot
             if (currentMillis - previousMillis > _pidDelay) {
                 previousMillis = currentMillis;
 
-                #ifdef ROBUS_A
+#if __ROBUS__ == ROBUS_A
                     float magic = _pid.Compute(rightPulse, leftPulse);
-                     _leftMotor.setSpeed((DEFAULT_SPEED + magic + 0.02));
-                #else
+                     _leftMotor.setSpeed(DEFAULT_SPEED + magic + 0.02);
+#elif __ROBUS__ == ROBUS_B
                    float magic = _pid.Compute(leftPulse, rightPulse);
-                   _rightMotor.setSpeed((DEFAULT_SPEED + magic));
-                #endif
+                   _rightMotor.setSpeed(DEFAULT_SPEED + magic);
+#endif
                 // Serial.print(leftPulse);
                 // Serial.print(" | ");
                 // Serial.println(rightPulse);
@@ -199,13 +195,13 @@ struct Robot
             if (currentMillis - previousMillis > _pidDelay) {
                 previousMillis = currentMillis;
 
-                #ifdef ROBUS_A
+#if __ROBUS__ == ROBUS_A
                     float magic = _pid.Compute(rightPulse, leftPulse);
-                     _leftMotor.setSpeed((DEFAULT_SPEED + magic + 0.02));
-                #else
+                     _leftMotor.setSpeed(DEFAULT_SPEED + magic + 0.02);
+#elif __ROBUS__ == ROBUS_B
                    float magic = _pid.Compute(leftPulse, rightPulse);
-                   _rightMotor.setSpeed((DEFAULT_SPEED + magic));
-                #endif
+                   _rightMotor.setSpeed(DEFAULT_SPEED + magic);
+#endif
                 // Serial.print(leftPulse);
                 // Serial.print(" | ");
                 // Serial.println(rightPulse);
@@ -236,51 +232,13 @@ struct Robot
             return false;
     }
 
-    void moveBreak(float distance) {
-        float pulseToReach = convertDistanceToPulse(distance);
-        int direction = 1;
-        if (distance < 0)
-            direction = -1;
-
-        int32_t leftPulse;
-        int32_t rightPulse;
-        _leftMotor.setSpeed(DEFAULT_SPEED * direction);
-        _rightMotor.setSpeed(DEFAULT_SPEED * direction);
-
-        unsigned currentMillis = millis();
-        unsigned previousMillis = 0;
-        do
-        {
-            leftPulse = _leftMotor.readEncoder();
-            rightPulse = _rightMotor.readEncoder();
-
-            currentMillis = millis();
-            if (currentMillis - previousMillis > _pidDelay) {
-                previousMillis = currentMillis;
-
-                #ifdef ROBUS_A
-                    float magic = _pid.Compute(rightPulse, leftPulse);
-                     _leftMotor.setSpeed((DEFAULT_SPEED + magic + 0.02) * direction);
-                #else
-                   float magic = _pid.Compute(leftPulse, rightPulse);
-                   _rightMotor.setSpeed((DEFAULT_SPEED + magic) * direction);
-                #endif
-                //  Serial.print(leftPulse);
-                //  Serial.print(" | ");
-                //  Serial.println(rightPulse);
-
-                Sensors sensors = _lineFollowerSensor.read();
-                if (sensors.leftVal && sensors.centerVal && sensors.rightVal) 
-                    return;
-            }
-        } while (leftPulse * direction <= pulseToReach && rightPulse * direction <= pulseToReach);
-
-        _leftMotor.stop();
-        _rightMotor.stop();
-
-        _pid.reset();
-    }
-
+    /*
+        0 - yellow
+        1 - green
+        2 - blue
+        3 - red
+        4 - undefined
+    */
     Color readColor() {
         return _colorSensor.read();
     }
