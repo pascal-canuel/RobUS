@@ -31,7 +31,7 @@ struct Robot
         _clamp = Clamp(1);
 
         _colorSensor = ColorSensor();
-        _distanceSensor = DistanceSensor();
+        _distanceSensor = DistanceSensor(0);
         _lineFollowerSensor = LineFollowerSensor();
         
         _pidDelay = 100;
@@ -129,49 +129,17 @@ struct Robot
         _pid.reset();
     }
 
-    void forwardBall() {
-        delay(300);
-        
-        _leftMotor.resetEncoder();
-        _rightMotor.resetEncoder();
-        
-        int32_t leftPulse;
-        int32_t rightPulse;
-        _leftMotor.setSpeed(DEFAULT_SPEED);
-        _rightMotor.setSpeed(DEFAULT_SPEED);
+    bool detectCenter() {
+        Sensors sensors = _lineFollowerSensor.read();
 
-        unsigned currentMillis = millis();
-        unsigned previousMillis = 0;
-        do
-        {
-            leftPulse = _leftMotor.readEncoder();
-            rightPulse = _rightMotor.readEncoder();
-
-            currentMillis = millis();
-            if (currentMillis - previousMillis > _pidDelay) {
-                previousMillis = currentMillis;
-
-#if __ROBUS__ == ROBUS_A
-                    float magic = _pid.Compute(rightPulse, leftPulse);
-                     _leftMotor.setSpeed(DEFAULT_SPEED + magic + 0.02);
-#elif __ROBUS__ == ROBUS_B
-                   float magic = _pid.Compute(leftPulse, rightPulse);
-                   _rightMotor.setSpeed(DEFAULT_SPEED + magic);
-#endif
-                // Serial.print(leftPulse);
-                // Serial.print(" | ");
-                // Serial.println(rightPulse);
-            }
-        } while(!Detection(13, 6));
-
-        _pid.reset();
-
-        delay(125);
-        stop();
-        closeClamp();
+        return !(sensors.leftVal && sensors.centerVal && sensors.rightVal);
     }
 
-    void forwardCenter() {
+    bool detectBall() {
+        return _distanceSensor.detectBall();
+    }
+
+    void forward(bool (*condition)(), void (*post)()) {
         delay(300);
         
         _leftMotor.resetEncoder();
@@ -181,8 +149,6 @@ struct Robot
         int32_t rightPulse;
         _leftMotor.setSpeed(DEFAULT_SPEED);
         _rightMotor.setSpeed(DEFAULT_SPEED);
-
-        Sensors sensors = { 0, 0, 0 };
 
         unsigned currentMillis = millis();
         unsigned previousMillis = 0;
@@ -206,30 +172,15 @@ struct Robot
                 // Serial.print(" | ");
                 // Serial.println(rightPulse);
             }
-            sensors = _lineFollowerSensor.read();
-        } while(!(sensors.leftVal && sensors.centerVal && sensors.rightVal));
+        } while(condition());
 
         _pid.reset();
 
-        delay(50);
+        delay(150);
         stop();
         delay(500);
-        openClamp();
-    }
 
-    bool Detection(int limiteMax, int limiteMin)
-    {
-        int val = 0;
-        int distance = 0;
-
-        val = analogRead(0);
-        distance = (7960.9*pow(val,-1.094));
-
-        Serial.println(distance);
-        if(distance<limiteMax && distance>limiteMin)
-            return true;
-        else
-            return false;
+        post();
     }
 
     /*

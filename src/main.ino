@@ -89,6 +89,8 @@ void loop() {
         }
 #endif
   }
+  robus.forwardTest(robus._distanceSensor.detectBall, robus.closeClamp);
+  robus.forwardTest(robus.detectCenter, robus.openClamp);
   // delay(100);
 }
 
