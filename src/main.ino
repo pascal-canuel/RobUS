@@ -13,7 +13,7 @@ Auteurs:
 
 #define ROBUS_A 0
 #define ROBUS_B 1
-#define __ROBUS__ ROBUS_B
+#define __ROBUS__ ROBUS_A
 
 #include "robot/Robot.h"
 
@@ -29,22 +29,25 @@ void setup(){
 
 void loop() {
     if (ROBUS_IsBumper(3)) {
-#if __ROBUS__ == ROBUS_A // Get the ball in a given and place it in the middle
+#if __ROBUS__ == ROBUS_A // Get the ball in a given color zone and place it in the middle
         target = YELLOW;
+        
         switch (target) {
             case BLUE:
                 robus.turn(-90);
                 robus.move(38);
                 robus.turn(-45);
-                takeBall();
-                returnBall();
+                forwardGrabBall();
+                robus.turn(180);
+                returnBallCenterDetection();
                 break;
             case YELLOW:
                 robus.turn(90);
                 robus.move(38);
                 robus.turn(45);
-                takeBall();
-                returnBall();
+                forwardGrabBall();
+                robus.turn(180);
+                returnBallCenterDetection();
                 break;
             case GREEN:
                 robus.turn(-90);
@@ -52,12 +55,12 @@ void loop() {
                 robus.turn(90);
                 robus.move(74); //
                 robus.turn(-45);
-                robus.forwardBall();
+                forwardGrabBall();
                 robus.move(-10);
                 robus.turn(-135);
                 robus.move(70);
                 robus.turn(-90);
-                putBallCenter();
+                returnBallCenterDistance();
                 break;
             case RED:
                 robus.turn(90);
@@ -65,18 +68,18 @@ void loop() {
                 robus.turn(-90);
                 robus.move(84); //
                 robus.turn(45);
-                robus.forwardBall();
+                forwardGrabBall();
                 robus.move(-10);
                 robus.turn(135);
                 robus.move(70);
                 robus.turn(90);
-                putBallCenter();
+                returnBallCenterDistance();
                 break;
         }
 #elif __ROBUS__ == ROBUS_B // Get the ball in the middle and place it in a given color zone
         target = RED;
-        robus.forwardBall(); // int pulses = robus.forwardBall();
-        robus.move(-20); // move back the previous forward distance
+
+        robus.forward(robus.detectBall, robus.closeClamp);
         switch (target) {
             case BLUE:
                 break;
@@ -89,25 +92,22 @@ void loop() {
         }
 #endif
   }
-  robus.forwardTest(robus._distanceSensor.detectBall, robus.closeClamp);
-  robus.forwardTest(robus.detectCenter, robus.openClamp);
   // delay(100);
 }
 
-void takeBall() {
-    robus.forwardBall();
+void forwardGrabBall() {
+    robus.forward(robus.detectBall, robus.closeClamp);
     robus.move(-10);
-    robus.turn(180);
 }
 
-void returnBall() {
-    robus.forwardCenter();
+void returnBallCenterDetection() {
+    robus.forward(robus.detectCenter, robus.openClamp);
     robus.move(-50);
 }
 
-void putBallCenter() {
-  robus.move(65);
-  delay(500);
-  robus.openClamp();
-  robus.move(-50);
+void returnBallCenterDistance() {
+    robus.move(65);
+    delay(500);
+    robus.openClamp();
+    robus.move(-50);
 }

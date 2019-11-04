@@ -85,16 +85,11 @@ struct Robot
     }
 
     void move(float distance) {
-        delay(1000);
-        
         float pulseToReach = convertDistanceToPulse(distance);
         int direction = 1;
         if (distance < 0)
             direction = -1;
 
-        _leftMotor.resetEncoder();
-        _rightMotor.resetEncoder();
-        
         int32_t leftPulse;
         int32_t rightPulse;
         _leftMotor.setSpeed(DEFAULT_SPEED * direction);
@@ -140,11 +135,6 @@ struct Robot
     }
 
     void forward(bool (*condition)(), void (*post)()) {
-        delay(300);
-        
-        _leftMotor.resetEncoder();
-        _rightMotor.resetEncoder();
-        
         int32_t leftPulse;
         int32_t rightPulse;
         _leftMotor.setSpeed(DEFAULT_SPEED);
@@ -192,70 +182,6 @@ struct Robot
     */
     Color readColor() {
         return _colorSensor.read();
-    }
-
-    /*
-        LEFT - CENTER - RIGHT
-        0      0        1     Adjust to the right
-        0      1        0     Ok
-        1      0        0     Adjust to the left
-        0      0        0     On a white space or color zone
-    */
-    void followLine() {
-        Sensors sensors = _lineFollowerSensor.read();
-        Serial.print("left: "); Serial.println(sensors.leftVal);
-        Serial.print("center: "); Serial.println(sensors.centerVal);
-        Serial.print("right: "); Serial.println(sensors.rightVal);
-
-        float error = 0.03;
-
-        Color color = readColor();
-        Serial.print("init color: "); Serial.println(color);
-        unsigned currentMillis = millis();
-        unsigned initMillis = currentMillis;
-        unsigned previousMillis = 0;
-
-        _leftMotor.setSpeed(DEFAULT_SPEED);
-        _rightMotor.setSpeed(DEFAULT_SPEED);
-
-        while (color == UNDEFINED) {
-            if (sensors.leftVal) {
-                _leftMotor.setSpeed(DEFAULT_SPEED);
-                _rightMotor.setSpeed(DEFAULT_SPEED + error);
-            } else if (sensors.centerVal) {
-                _leftMotor.setSpeed(DEFAULT_SPEED);
-                _rightMotor.setSpeed(DEFAULT_SPEED);
-            } else if (sensors.rightVal) {
-                _leftMotor.setSpeed(DEFAULT_SPEED + error);
-                _rightMotor.setSpeed(DEFAULT_SPEED);
-            }
-
-            currentMillis = millis();
-
-            if (currentMillis - previousMillis > 50) {
-                 previousMillis = currentMillis;
-                 color = readColor();
-                 Serial.print("caliss: "); Serial.println(color);
-             }
-             unsigned diffMillis = currentMillis - initMillis;
-             Serial.print("diff millis: "); Serial.println(currentMillis - initMillis);
-            if (!(sensors.leftVal && sensors.centerVal && sensors.rightVal) && diffMillis > 1000) {
-                Serial.println("TBK");
-                Serial.println(currentMillis);
-                _leftMotor.stop();
-                _rightMotor.stop();
-                delay(100);
-                color = readColor();
-                if (color == UNDEFINED) {
-                    _leftMotor.setSpeed(DEFAULT_SPEED);
-                    _rightMotor.setSpeed(DEFAULT_SPEED);
-                }
-                Serial.print("sir path: "); Serial.println(color);
-            }
-        }
-        
-        _leftMotor.stop();
-        _rightMotor.stop();
     }
 
     void initParts() {
