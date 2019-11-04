@@ -38,22 +38,22 @@ void loop() {
       Robus B - get the ball in the middle and place it on a color zone
     */
     #ifdef ROBUS_A
-      Color target = YELLOW;
+      Color target = BLUE;
       switch (target) {
           case BLUE:
               robus.turn(-90);
               robus.move(38);
               robus.turn(-45);
               takeBall();
-              robus.turn(135);
+              robus.turn(138);
               robus.move(70);
               robus.turn(90);
-              robus.move(70);
+              robus.move(60);
               delay(500);
               robus.openClamp();
               robus.move(-20);
               robus.turn(180);
-              robus.move(60);
+              robus.move(58);
               break;
           case YELLOW:
               robus.turn(90);
@@ -63,7 +63,12 @@ void loop() {
               robus.turn(-145);
               robus.move(70);
               robus.turn(-90);
-              putBallCenter();
+              robus.move(65);
+              delay(500);
+              robus.openClamp();
+              robus.move(-20);
+              robus.turn(180);
+              robus.move(60);
               break;
           case GREEN:
               robus.turn(-90);
@@ -74,11 +79,15 @@ void loop() {
               robus.forwardBall();
               robus.move(-10);
               robus.turn(-140);
-              robus.move(70);
+              robus.move(75);
               robus.turn(-90);
-              putBallCenter();
-              robus.rotate(90);
-              robus.move(40);
+              
+              robus.move(55);
+              delay(500);
+              robus.openClamp();
+              robus.move(-20);
+              robus.turn(180);
+              robus.move(50);
               break;
           case RED:
               robus.turn(90);
@@ -91,23 +100,52 @@ void loop() {
               robus.turn(135);
               robus.move(70);
               robus.turn(90);
-              putBallCenter();
-              robus.rotate(90);
-              robus.move(50);
+              
+              
+              robus.move(65);
+              delay(500);
+              robus.openClamp();
+              robus.move(-20);
+              robus.turn(180);
+              robus.move(40);
+              
+              
+              
               break;
       }
     #else
-      Color target = RED;
+      Color target = GREEN;
       robus.forwardBall(); // int pulses = robus.forwardBall();
-      robus.move(-20); // move back the previous forward distance
+      robus.move(50); // move back the previous forward distance
+      robus.turn(180);
       switch (target) {
           case BLUE:
+              robus.turn(-90);
+              robus.move(38);
+              robus.turn(-45);
+              robus.move(60);
               break;
           case YELLOW:
+              robus.turn(90);
+              robus.move(38);
+              robus.turn(45);
+              robus.move(60);
               break;
           case GREEN:
+              robus.turn(-90);
+              robus.move(38);
+              robus.turn(90);
+              robus.move(90); //
+              robus.turn(-45);
+              robus.move(65);
               break;
           case RED:
+              robus.turn(90);
+              robus.move(38);
+              robus.turn(-90);
+              robus.move(80); //
+              robus.turn(50);
+              robus.move(65);
               break;
       }
     #endif
@@ -132,5 +170,5 @@ void putBallCenter() {
   robus.openClamp();
   robus.move(-20);
   robus.turn(180);
-  robus.move(60);
+  robus.move(40);
 }
