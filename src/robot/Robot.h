@@ -2,7 +2,7 @@
 #define Robot_H_
 
 /* comment to compile for robus b */
-//#define ROBUS_A
+#define ROBUS_A
 
 #include "Robot.Utils.h"
 
