@@ -44,6 +44,9 @@ void loop() {
       Robus A - go get the ball on a color zone and place it in the middle
       Robus B - get the ball in the middle and place it on a color zone
     */
+   //ROBOT A POUR ALLER AU VERT EST ISH 
+   //ROBOT A POUR ALLER AU ROUGE EST EH
+   //TESTER LES ENCODEURS SI IL SE MET A TOURNER EN ROND
     #ifdef ROBUS_A
       Color target = GREEN;
       switch (target) {
@@ -58,9 +61,9 @@ void loop() {
               robus.move(60);
               delay(500);
               robus.openClamp();
-              robus.move(-20);
+              robus.move(-30);
               robus.turn(180);
-              robus.move(58);
+              robus.move(50);
               break;
           case YELLOW:
               robus.turn(90);
@@ -85,16 +88,16 @@ void loop() {
               robus.turn(-45);
               robus.forwardBall();
               robus.move(-10);
-              robus.turn(-141);
-              robus.move(140);
-              robus.turn(-135);
+              robus.turn(-143);
+              robus.move(110);
+              robus.turn(-120);
               
-              robus.move(90);
+              robus.move(70);
               delay(500);
               robus.openClamp();
               robus.move(-20);
-              robus.turn(-135);
-              robus.move(50);
+              robus.turn(180);
+              robus.move(70);
               break;
 
           case RED:
@@ -122,7 +125,7 @@ void loop() {
               break;
       }
     #else
-      Color target = GREEN;
+      Color target = RED;
       delay(30000);
       robus.forwardBall(); // int pulses = robus.forwardBall();
       robus.move(50); // move back the previous forward distance
@@ -159,7 +162,6 @@ void loop() {
       }
     #endif
   }
-
   delay(100);
 }
 
