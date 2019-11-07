@@ -59,7 +59,7 @@ void loop() {
               robus.move(70);
               robus.turn(90);
               robus.move(60);
-              delay(500);
+              delay(1000);
               robus.openClamp();
               robus.move(-30);
               robus.turn(180);
@@ -93,7 +93,7 @@ void loop() {
               robus.turn(-120);
               
               robus.move(70);
-              delay(500);
+              delay(1000);
               robus.openClamp();
               robus.move(-20);
               robus.turn(180);
@@ -114,7 +114,7 @@ void loop() {
               
               
               robus.move(90);
-              delay(500);
+              delay(1000);
               robus.openClamp();
               robus.move(-15);
               robus.turn(135);
@@ -126,7 +126,7 @@ void loop() {
       }
     #else
       Color target = RED;
-      delay(30000);
+      delay(60000);
       robus.forwardBall(); // int pulses = robus.forwardBall();
       robus.move(50); // move back the previous forward distance
       robus.turn(180);
