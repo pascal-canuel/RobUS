@@ -11,89 +11,79 @@ Auteurs:
   - Xavier Champagne
 */
 
-#include "robot/Robot.h"
+#define ROBUS_A 0
+#define ROBUS_B 1
+#define __ROBUS__ ROBUS_A
 
-Robot robus;
+/*
+  ID-12.ino
+*/
 
-void setup(){
+#include <LibRobus.h> // Essentielle pour utiliser RobUS
+
+char crecu, i, incoming=0;
+char id_tag[20];
+
+void initZumoReflectanceSensorArray() {
+  pinMode(40, INPUT);
+  pinMode(41, INPUT);
+  pinMode(42, INPUT);
+  pinMode(43, INPUT);
+  pinMode(44, INPUT);
+  pinMode(45, INPUT);
+}
+
+void readZumboReflectanceSensorArray() {
+  Serial.print("1: "); Serial.println(digitalRead(40));
+  Serial.print("2: "); Serial.println(digitalRead(41));
+  Serial.print("3: "); Serial.println(digitalRead(42));
+  Serial.print("4: "); Serial.println(digitalRead(43));
+  Serial.print("5: "); Serial.println(digitalRead(44));
+  Serial.print("6: "); Serial.println(digitalRead(45));
+}
+
+void setup()
+{
   BoardInit();
+  Serial2.begin(2000); // RX 17
+  Serial.println("Test du ID-12 sur UART2 (RX2/Digital 17)");
 
-  robus = Robot();
-  robus.init();
+  initZumoReflectanceSensorArray();
 }
 
-void loop() {
-  /*
-    0 - yellow
-    1 - green
-    2 - blue
-    3 - red
-    4 - undefined
-  */
-  // Color color = robus.readColor();
-  // Serial.print("color: "); Serial.println(color);
-  if (ROBUS_IsBumper(3)) {
-    /*
-      Robus A - go get the ball on a color zone and place it in the middle
-      Robus B - get the ball in the middle and place it on a color zone
-    */
-    #ifdef ROBUS_A
-      Color target = RED;
-      switch (target) {
-          case BLUE:
-              robus.turn(-90);
-              robus.move(38);
-              robus.turn(-45);
-              takeAndReturn();
-              break;
-          case YELLOW:
-              robus.turn(90);
-              robus.move(38);
-              robus.turn(45);
-              takeAndReturn();
-              break;
-          case GREEN:
-              robus.turn(-90);
-              robus.move(38);
-              robus.turn(90);
-              robus.move(74);
-              robus.turn(-45);
-              takeAndReturn();
-              break;
-          case RED:
-              robus.turn(90);
-              robus.move(38);
-              robus.turn(-90);
-              robus.move(80); //
-              robus.turn(45);
-              takeAndReturn();
-              break;
+void loop()
+{
+  while(1)
+  {
+    delay(2000);
+    readZumboReflectanceSensorArray();
+    if(Serial2.available())
+    {
+      crecu=Serial2.read();     // lit le ID-12
+      switch(crecu)
+      {
+        case 0x02:
+          // START OF TRANSMIT
+          AX_BuzzerON();
+          i = 0;
+          incoming = 1;
+          break;
+        case 0x03:
+          // END OF TRANSMIT
+          AX_BuzzerOFF();
+          incoming = 0;
+          // Affiche le code recu sans valider le checksum
+          for(i = 0; i < 10; i++)
+            Serial.print(id_tag[i]);
+          Serial.println("");
+          break;
+        default:
+          if(incoming)
+            id_tag[i++] = crecu;
+          break;
       }
-    #else
-      Color target = RED;
-      robus.forwardBall(); // move back
-      robus.move(-20);
-      switch (target) {
-          case BLUE:
-              break;
-          case YELLOW:
-              break;
-          case GREEN:
-              break;
-          case RED:
-              break;
-      }
-    #endif
+    }
   }
-
-  delay(100);
 }
 
-void takeAndReturn() {
-    robus.forwardBall();
-    robus.move(-10);
-    robus.turn(180);
-    robus.forwardCenter();
-    robus.move(-50);
-}
-
+/* fin du fichier */
