@@ -16,9 +16,26 @@ Auteurs:
 
 #include "robot/Robot.h"
 
+#define SerialRFID Serial1
+
 void setup()
 {
   BoardInit();
+
+  BluetoothInit();
+  AudioInit();
+  SerialRFID.begin(9600);
 }
 
-void loop() {}
+void loop() {
+  if (SerialBT.available()) {
+    String str = SerialBT.readString();
+    if (str == "MOVE") {
+
+    } else if (str == "FOOD") {
+
+    } else if (str == "WHISTLE") {
+
+    }
+  }
+}
