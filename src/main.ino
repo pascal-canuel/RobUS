@@ -18,32 +18,58 @@ Auteurs:
 
 #define SerialRFID Serial1 // 19 (RX1)
 
+#include "SerialMP3Player.h"
+SerialMP3Player mp3(15, 14);
+
 void setup()
 {
   BoardInit();
 
   BluetoothInit();
-  AudioInit();
   SerialRFID.begin(9600);
+
+  // mp3.showDebug(1);       // print what we are sending to the mp3 board.
+
+  mp3.begin(9600);        // start mp3-communication
+  delay(500);             // wait for init
+  mp3.sendCommand(CMD_SEL_DEV, 0, 2);   //select sd-card
+  delay(500);             // wait for init
+  mp3.play();
 }
 
 void loop() {
-  if (SerialBT.available()) {
-    String str = SerialBT.readString();
-    Serial.println(str);
-
-    if (str.substring(0, 4) == "MOVE") {
-      String targets = str.substring(4);
-      for (char target: targets) {
-        Serial.println(target);
-      }
-    } else if (str == "FOOD") {
-
-    } else if (str == "WHISTLE") {
-
-    }
-  }
+  mp3.play();     // Play "hello.mp3". You must hear "Hello World"
+  delay(3000);    // wait 3 seconds
 }
+
+// void loop() {
+//   delay(1000);
+//   Serial.print("1: "); Serial.println(analogRead(A7));
+//   Serial.print("2: "); Serial.println(analogRead(A8));
+//   Serial.print("3: "); Serial.println(analogRead(A9));
+//   Serial.print("4: "); Serial.println(analogRead(A10));
+//   Serial.print("5: "); Serial.println(analogRead(A11));
+//   Serial.print("6: "); Serial.println(analogRead(A12));
+//   Serial.print("7: "); Serial.println(analogRead(A13));
+//   Serial.print("8: "); Serial.println(analogRead(A6));
+//   Serial.println();
+
+//   if (SerialBT.available()) {
+//     String str = SerialBT.readString();
+//     Serial.println(str);
+
+//     if (str.substring(0, 4) == "MOVE") {
+//       String targets = str.substring(4);
+//       for (char target: targets) {
+//         Serial.println(target);
+//       }
+//     } else if (str == "FOOD") {
+
+//     } else if (str == "WHISTLE") {
+
+//     }
+//   }
+// }
 
 char crecu;
 bool incoming = false;
