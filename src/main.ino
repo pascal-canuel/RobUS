@@ -32,12 +32,15 @@ void loop() {
     String str = SerialBT.readString();
     Serial.println(str);
 
-    if (str == "MOVE") {
-
+    if (str.substring(0, 4) == "MOVE") {
+      String targets = str.substring(4);
+      for (char target: targets) {
+        Serial.println(target);
+      }
     } else if (str == "FOOD") {
 
     } else if (str == "WHISTLE") {
-      
+
     }
   }
 }
