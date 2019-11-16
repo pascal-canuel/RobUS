@@ -40,7 +40,8 @@ void setup()
 //   }
 // }
 
-char crecu, incoming=0;
+char crecu;
+bool incoming = false;
 String idTag;
 
 String tags[][2] = {
@@ -55,23 +56,22 @@ void loop()
   {
     if(SerialRFID.available())
     {
-
       crecu = SerialRFID.read(); // lit le ID-12
-      switch(crecu)
+      switch (crecu)
       {
         case 0x02:
           // START OF TRANSMIT
           AX_BuzzerON();
           idTag = "";
-          incoming = 1;
+          incoming = true;
           break;
         case 0x03:
           // END OF TRANSMIT
           AX_BuzzerOFF();
-          incoming = 0;
+          incoming = false;
           // Affiche le code recu sans valider le checksum
           idTag = idTag.substring(0, 10);
-          for(auto& tag: tags)
+          for (auto& tag: tags)
           {
             if (tag[0] == idTag)
             {
@@ -80,7 +80,7 @@ void loop()
           }
           break;
         default:
-          if(incoming)
+          if (incoming)
             idTag += crecu;
           break;
       }
