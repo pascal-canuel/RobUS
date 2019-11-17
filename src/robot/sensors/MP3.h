@@ -11,7 +11,7 @@ struct MP3
 
     void init() 
     {
-        _player = SerialMP3Player(15, 14); // Serial3
+        _player = SerialMP3Player(14, 15); // Serial3
         _player.begin(9600);
         delay(500); // wait for init
         _player.sendCommand(CMD_SEL_DEV, 0, 2); // select sd-card
@@ -25,6 +25,23 @@ struct MP3
     void playNext()
     {
         _player.playNext();
+    }
+
+    void pause()
+    {
+        _player.pause();
+    }
+
+    // max 30
+    void volUp()
+    {
+        _player.volUp();
+    }
+
+    // min 0
+    void volDown()
+    {
+        _player.volDown();
     }
 };
 

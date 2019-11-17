@@ -2,7 +2,7 @@
 #define Robot_H_
 
 #include "Robot.Utils.h"
-#include "parts/Motor.h"
+#include "actuators/Motor.h"
 #include "PID.h"
 
 struct Robot
@@ -16,7 +16,7 @@ struct Robot
     Robot() {
         _leftMotor = Motor(0);
         _rightMotor = Motor(1);
-        
+    
         _pidDelay = 100;
         _pid = PID(_pidDelay, 0.15, 0.05);
     }
