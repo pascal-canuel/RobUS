@@ -116,29 +116,6 @@ struct Robot
 
     void followLine(int targetTagValue) 
     {
-        float kP = 0.05;
-        float kI = 0.01;
-        float kD = 0.001;
-
-        float totalError = 0;
-        float lastError = 0;
-
-        while (_rfid.read() != targetTagValue)
-        {
-            // size 8
-            int *array = _reflectanceArray.read();
-
-            float error = array[0] * 40 + array[1] * 30 + array[2] * 20 + array[3] * 10 + 
-                            array[4] * -10 + array[5] * -20 + array[6] * -30 + array[7] * -40;
-
-            _leftMotor.setSpeed(DEFAULT_SPEED - (kP * error) - (kI * totalError) - (kD * lastError));
-            _rightMotor.setSpeed(DEFAULT_SPEED + (kP * error) + (kI * totalError) + (kD + lastError));
-
-            totalError += error;
-            lastError = error;
-
-            delay(100);
-        }
     }
 
     void initParts() {
