@@ -43,7 +43,12 @@ void loop()
             String targets = data.substring(4);
             for (char target: targets) 
             {
-                Serial.println(target);
+                // convert char to int (ascii table)
+                // '0' -> 0 = 48 -> 0
+                int value = target - '0';
+                Serial.println(value);
+                
+                robus.followLine(value);
             }
         } 
         else if (data == "FOOD") 

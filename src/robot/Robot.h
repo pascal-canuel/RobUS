@@ -3,6 +3,8 @@
 
 #include "Robot.Utils.h"
 #include "actuators/Motor.h"
+#include "sensors/ReflectanceArray.h"
+#include "sensors/RFID.h"
 #include "PID.h"
 
 struct Robot
@@ -10,6 +12,9 @@ struct Robot
     Motor _leftMotor;
     Motor _rightMotor;
 
+    ReflectanceArray _reflectanceArray;
+    RFID _rfid;
+    
     PID _pid;
     float _pidDelay;
 
@@ -17,6 +22,9 @@ struct Robot
         _leftMotor = Motor(0);
         _rightMotor = Motor(1);
     
+        _reflectanceArray = ReflectanceArray();
+        _rfid = RFID();
+
         _pidDelay = 100;
         _pid = PID(_pidDelay, 0.15, 0.05);
     }
@@ -106,12 +114,41 @@ struct Robot
         _pid.reset();
     }
 
+    void followLine(int targetTagValue) 
+    {
+        float kP = 0.05;
+        float kI = 0.01;
+        float kD = 0.001;
+
+        float totalError = 0;
+        float lastError = 0;
+
+        while (_rfid.read() != targetTagValue)
+        {
+            // size 8
+            int *array = _reflectanceArray.read();
+
+            float error = array[0] * 40 + array[1] * 30 + array[2] * 20 + array[3] * 10 + 
+                            array[4] * -10 + array[5] * -20 + array[6] * -30 + array[7] * -40;
+
+            _leftMotor.setSpeed(DEFAULT_SPEED - (kP * error) - (kI * totalError) - (kD * lastError));
+            _rightMotor.setSpeed(DEFAULT_SPEED + (kP * error) + (kI * totalError) + (kD + lastError));
+
+            totalError += error;
+            lastError = error;
+
+            delay(100);
+        }
+    }
+
     void initParts() {
         _leftMotor.resetEncoder();
         _rightMotor.resetEncoder();
     }
 
-    void initSensors() {}
+    void initSensors() {
+        _rfid.init();
+    }
 
     void init() {
         initParts();
