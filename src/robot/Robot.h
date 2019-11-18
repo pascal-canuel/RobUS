@@ -116,6 +116,10 @@ struct Robot
 
     void followLine(int targetTagValue) 
     {
+        while (_rfid.read() != targetTagValue)
+        {
+            delay(100);
+        }
     }
 
     void initParts() {

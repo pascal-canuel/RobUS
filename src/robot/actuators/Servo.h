@@ -14,14 +14,18 @@ struct Servo
 
     void init() {
         SERVO_Enable(_servoID);
+        close();
     }
 
     void open() {
-        // SERVO_SetAngle(_servoID, );
+        SERVO_Enable(_servoID);
+        SERVO_SetAngle(_servoID, 180);
     }
 
     void close() {
-        // SERVO_SetAngle(_servoID, );
+        SERVO_SetAngle(_servoID, 120);
+        delay(100);
+        SERVO_Disable(_servoID);
     }
 };
 

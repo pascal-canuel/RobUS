@@ -11,6 +11,7 @@ Auteurs:
 */
 
 #include "robot/Robot.h"
+#include "robot/actuators/Servo.h"
 #include "robot/sensors/MP3.h"
 
 #define ROBUS_A 0
@@ -18,6 +19,7 @@ Auteurs:
 #define __ROBUS__ ROBUS_A
 
 Robot robus;
+Servo distributor;
 MP3 player;
 
 void setup()
@@ -27,6 +29,9 @@ void setup()
 
     robus = Robot();
     robus.init();
+
+    distributor = Servo(1);
+    distributor.init();
 
     player.init();
 }
@@ -53,7 +58,9 @@ void loop()
         } 
         else if (data == "FOOD") 
         {
-
+            distributor.open();
+            delay(500);
+            distributor.close();
         } 
         else if (data == "WHISTLE") 
         {
