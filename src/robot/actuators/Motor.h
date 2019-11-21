@@ -36,8 +36,6 @@ struct Motor
 
     void stop() {
         setSpeed(0);
-        delay(500); // cancel inertia
-        resetEncoder();
     }
 };
 

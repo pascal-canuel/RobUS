@@ -26,7 +26,7 @@ struct Robot
         _rfid = RFID();
 
         _pidDelay = 100;
-        _pid = PID(_pidDelay, 0.15, 0.05);
+        _pid = PID(_pidDelay, 0.20, 0.01);
     }
 
     void rotate(float degree) {
@@ -116,10 +116,11 @@ struct Robot
 
     void followLine(int targetTagValue) 
     {
-        while (_rfid.read() != targetTagValue)
-        {
-            delay(100);
-        }
+        int* array = _reflectanceArray.read();
+        // while (_rfid.read() != targetTagValue)
+        // {
+        //     delay(100);
+        // }
     }
 
     void initParts() {
@@ -139,6 +140,9 @@ struct Robot
     void stop() {
         _leftMotor.stop();
         _rightMotor.stop();
+        delay(500); // inertia
+        _leftMotor.resetEncoder();
+        _rightMotor.resetEncoder();
     }
 };
 

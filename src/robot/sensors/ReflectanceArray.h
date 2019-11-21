@@ -24,6 +24,7 @@ struct ReflectanceArray
         array[6] = treshold(analogRead(A12));
         array[7] = treshold(analogRead(A13));
 
+        Serial.print(array[0]); Serial.print(" | "); Serial.print(array[1]); Serial.print(" | ");Serial.print(array[2]); Serial.print(" | "); Serial.print(array[3]); Serial.print(" | "); Serial.print(array[4]); Serial.print(" | "); Serial.print(array[5]); Serial.print(" | "); Serial.print(array[6]); Serial.print(" | "); Serial.println(array[7]);
         return array;
     }
 };

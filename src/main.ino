@@ -68,8 +68,11 @@ void loop()
         }
     }
     
-    if (ROBUS_IsBumper(3))
-        player.playNext();
+    if (ROBUS_IsBumper(3)) 
+    {
+        // player.playNext();
+        robus.followLine(0);
+    }
     if (ROBUS_IsBumper(1))
         player.volUp();
     if (ROBUS_IsBumper(0))
