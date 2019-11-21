@@ -14,7 +14,7 @@ struct ReflectanceArray
 
     // return array of size 8 (0: not black, 1: black)
     int* read() {
-        int array[8];
+        int* array = new int[8];
         array[0] = treshold(analogRead(A6));
         array[1] = treshold(analogRead(A7));
         array[2] = treshold(analogRead(A8));

@@ -116,7 +116,16 @@ struct Robot
 
     void followLine(int targetTagValue) 
     {
-        int* array = _reflectanceArray.read();
+        while (true)
+        {
+            int* array = _reflectanceArray.read();
+            Serial.print(array[0]); Serial.print(" | "); Serial.print(array[1]); Serial.print(" | ");Serial.print(array[2]); Serial.print(" | "); Serial.print(array[3]); Serial.print(" | "); Serial.print(array[4]); Serial.print(" | "); Serial.print(array[5]); Serial.print(" | "); Serial.print(array[6]); Serial.print(" | "); Serial.println(array[7]);
+            float error = array[0] * 40 + array[1] * 30 + array[2] * 20 + array[3] * 10 + 
+                array[4] * -10 + array[5] * -20 + array[6] * -30 + array[7] * -40;
+            Serial.print("error: "); Serial.println(error);
+            delay(500);
+            delete array;
+        }
         // while (_rfid.read() != targetTagValue)
         // {
         //     delay(100);
