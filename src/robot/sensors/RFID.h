@@ -28,12 +28,12 @@ struct RFID
     // return id of tag (-1 if no tag detected)
     int read() 
     {
-
         if (SerialRFID.available() && SerialRFID.read() == 0x02) 
         {
             AX_BuzzerON();
-            char crecu;
+            char crecu = '0';
             String idTag = "";
+            Serial.print("crecu"); Serial.println(crecu == 0x03);
 
             while (crecu != 0x03) 
             {
@@ -41,9 +41,14 @@ struct RFID
                 {
                     crecu = SerialRFID.read();
                     idTag += crecu;
+                    Serial.println(idTag);
                 }
             }
             AX_BuzzerOFF();
+            // while (SerialRFID.available() > 0) {
+            //     char t = SerialRFID.read();
+            // }
+            // SerialRFID.flush();
             // remove checksum
             idTag = idTag.substring(0, 10);
             for (Tag tag: tags)

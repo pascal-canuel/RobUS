@@ -9,7 +9,7 @@ struct ReflectanceArray
 
     int treshold(int analogValue)
     {
-        return (analogValue > 900) ? 1 : 0;
+        return (analogValue > 960) ? 1 : 0;
     }
 
     // return array of size 8 (0: not black, 1: black)
@@ -24,7 +24,7 @@ struct ReflectanceArray
         array[6] = treshold(analogRead(A12));
         array[7] = treshold(analogRead(A13));
 
-        Serial.print(array[0]); Serial.print(" | "); Serial.print(array[1]); Serial.print(" | ");Serial.print(array[2]); Serial.print(" | "); Serial.print(array[3]); Serial.print(" | "); Serial.print(array[4]); Serial.print(" | "); Serial.print(array[5]); Serial.print(" | "); Serial.print(array[6]); Serial.print(" | "); Serial.println(array[7]);
+        // Serial.print(array[0]); Serial.print(" | "); Serial.print(array[1]); Serial.print(" | ");Serial.print(array[2]); Serial.print(" | "); Serial.print(array[3]); Serial.print(" | "); Serial.print(array[4]); Serial.print(" | "); Serial.print(array[5]); Serial.print(" | "); Serial.print(array[6]); Serial.print(" | "); Serial.println(array[7]);
         return array;
     }
 };

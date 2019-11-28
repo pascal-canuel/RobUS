@@ -116,20 +116,39 @@ struct Robot
 
     void followLine(int targetTagValue) 
     {
-        while (true)
-        {
-            int* array = _reflectanceArray.read();
-            Serial.print(array[0]); Serial.print(" | "); Serial.print(array[1]); Serial.print(" | ");Serial.print(array[2]); Serial.print(" | "); Serial.print(array[3]); Serial.print(" | "); Serial.print(array[4]); Serial.print(" | "); Serial.print(array[5]); Serial.print(" | "); Serial.print(array[6]); Serial.print(" | "); Serial.println(array[7]);
-            float error = array[0] * 40 + array[1] * 30 + array[2] * 20 + array[3] * 10 + 
-                array[4] * -10 + array[5] * -20 + array[6] * -30 + array[7] * -40;
-            Serial.print("error: "); Serial.println(error);
-            delay(500);
-            delete array;
-        }
         // while (_rfid.read() != targetTagValue)
         // {
         //     delay(100);
         // }
+        
+        float speed = 0.15;
+        float pidDelay = 10;
+
+        float kP = 0.05;
+        float kD = 0.02;
+
+        float lastError = 0;
+
+        while (_rfid.read() == -1)
+        {
+            int* array = _reflectanceArray.read();
+            float error = array[0] + array[1] * 3 + array[2] * 2 + array[3] - (array[4] *1 + array[5] * 2 + array[6] * 3 + array[7]);
+            
+            float errorD = (error - lastError) / pidDelay;
+
+            // Serial.println(error); Serial.print(" | "); Serial.println(errorD);
+
+            _leftMotor.setSpeed(speed - (kP * error) - (kD * errorD));
+            _rightMotor.setSpeed(speed + (kP * error) - (kD * errorD));
+
+            lastError = error;
+ 
+            delete[] array;
+
+            delay(pidDelay);
+        }
+        
+        stop();
     }
 
     void initParts() {
