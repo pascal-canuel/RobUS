@@ -6,6 +6,7 @@
 #include "sensors/ReflectanceArray.h"
 #include "sensors/RFID.h"
 #include "PID.h"
+#include "sensors/MP3.h"
 
 struct Robot
 {
@@ -17,6 +18,8 @@ struct Robot
     
     PID _pid;
     float _pidDelay;
+
+    MP3 player;
 
     Robot() {
         _leftMotor = Motor(0);
@@ -123,7 +126,8 @@ struct Robot
         
         float speed = 0.15;
         float pidDelay = 10;
-
+        unsigned long totalDelay = 0;
+    
         float kP = 0.05;
         float kD = 0.02;
 
@@ -142,9 +146,17 @@ struct Robot
             _rightMotor.setSpeed(speed - (kP * error) - (kD * errorD));
 
             lastError = error;
- 
+
             delete[] array;
 
+            totalDelay += pidDelay;
+            if (totalDelay % 500 == 0) {
+                if (SerialBT.available()) 
+                {
+                    String data = SerialBT.readString();
+                    Serial.println(data);
+                }
+            }
             delay(pidDelay);
         }
         
@@ -158,6 +170,7 @@ struct Robot
 
     void initSensors() {
         _rfid.init();
+        player.init();
     }
 
     void init() {
