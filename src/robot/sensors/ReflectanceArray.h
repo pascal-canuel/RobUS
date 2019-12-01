@@ -9,7 +9,7 @@ struct ReflectanceArray
 
     int treshold(int analogValue)
     {
-        return (analogValue > 960) ? 1 : 0;
+        return (analogValue > 800) ? 1 : 0;
     }
 
     // return array of size 8 (0: not black, 1: black)

@@ -45,53 +45,25 @@ void loop()
 
         if (data.substring(0, 4) == "MOVE") 
         {
-            String targets = data.substring(4);
-
-            char crecu, i, incoming=0;
-            char id_tag[20];
-
-            int cpt = 0;
-            while(cpt < targets.length())
-            {
-                if( SerialRFID.available() )
-                {
-                    crecu=SerialRFID.read();     // lit le ID-12
-                    switch( crecu )
-                    {
-                        case 0x02:
-                        // START OF TRANSMIT
-                        AX_BuzzerON();
-                        i=0;
-                        incoming=1;
-                        break;
-                        case 0x03:
-                        // END OF TRANSMIT
-                        AX_BuzzerOFF();
-                        incoming=0;
-                        // Affiche le code recu sans valider le checksum
-                        for( i=0 ; i<10 ; i++ )
-                            Serial.print(id_tag[i]);
-                        Serial.println("");
-                        
-                        cpt++;
-                        break;
-                        default:
-                        if( incoming )
-                            id_tag[i++] = crecu;
-                        break;
-                    }
-                }
+            if (data[4] == '0') {
+                robus.followLine(2);
+                robus.rotate(150);
+                robus.followLine(1);
+                robus.move(5);
+                robus.followLine(0);
+                robus.move(10);
+                robus.followLine(0);
+                robus.move(10);
+            } else if (data[4] == '1') {
+                robus.followLine(2);
+                robus.move(10);
+                robus.followLine(1);
+                robus.turn(-85);
+                robus.followLine(0);
+                robus.move(10);
+                robus.followLine(0);
+                robus.move(10);
             }
-
-            // for (char target: targets) 
-            // {
-            //     // convert char to int (ascii table)
-            //     // '0' -> 0 = 48 -> 0
-            //     int value = target - '0';
-            //     Serial.println(value);
-                
-            //     robus.followLine(value);
-            // }
         } 
         else if (data == "FOOD") 
         {
@@ -99,25 +71,17 @@ void loop()
             delay(500);
             distributor.close();
         } 
-        else if (data == "WHISTLE") 
-        {
+        else if (data == "PLAY")
+            player.play();
+        else if (data == "PAUSE") 
+            player.pause();
+        else if (data == "NEXT")
             player.playNext();
-        }
+        else if (data == "LAST")
+            player.playLast();
     }
     
-    if (ROBUS_IsBumper(3)) {
-        // player.playNext();
-        // Serial.println(robus._rfid.read());
-        robus.followLine(0);
-        Serial.println("first stop");
-        robus.move(10);
-        robus.followLine(0);
-        robus.move(10);
-        robus.followLine(0);
-        //robus._reflectanceArray.read();
-    }
-    if (ROBUS_IsBumper(1))
-        player.volUp();
-    if (ROBUS_IsBumper(0))
-        player.volDown();
+    // if (ROBUS_IsBumper(3)) 
+    // if (ROBUS_IsBumper(1))
+    // if (ROBUS_IsBumper(0))
 }

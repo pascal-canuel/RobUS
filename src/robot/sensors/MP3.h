@@ -27,6 +27,11 @@ struct MP3
         _player.playNext();
     }
 
+    void playLast()
+    {
+        _player.playPrevious();
+    }
+    
     void pause()
     {
         _player.pause();

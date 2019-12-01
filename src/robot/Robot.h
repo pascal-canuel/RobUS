@@ -138,8 +138,8 @@ struct Robot
 
             // Serial.println(error); Serial.print(" | "); Serial.println(errorD);
 
-            _leftMotor.setSpeed(speed - (kP * error) - (kD * errorD));
-            _rightMotor.setSpeed(speed + (kP * error) - (kD * errorD));
+            _leftMotor.setSpeed(speed + (kP * error) + (kD * errorD));
+            _rightMotor.setSpeed(speed - (kP * error) - (kD * errorD));
 
             lastError = error;
  
