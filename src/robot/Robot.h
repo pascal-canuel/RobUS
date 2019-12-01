@@ -7,6 +7,7 @@
 #include "sensors/RFID.h"
 #include "PID.h"
 #include "sensors/MP3.h"
+#include "actuators/Servo.h"
 
 struct Robot
 {
@@ -20,6 +21,12 @@ struct Robot
     float _pidDelay;
 
     MP3 player;
+    Servo distributor;
+
+    float kP;
+    float kI;
+    float kD;
+    float speed;
 
     Robot() {
         _leftMotor = Motor(0);
@@ -30,6 +37,10 @@ struct Robot
 
         _pidDelay = 100;
         _pid = PID(_pidDelay, 0.20, 0.01);
+
+        distributor = Servo(1);
+
+        defaultPID();
     }
 
     void rotate(float degree) {
@@ -124,13 +135,10 @@ struct Robot
         //     delay(100);
         // }
         
-        float speed = 0.15;
         float pidDelay = 10;
         unsigned long totalDelay = 0;
     
-        float kP = 0.05;
-        float kD = 0.02;
-
+        float totalError = 0;
         float lastError = 0;
 
         while (_rfid.read() == -1)
@@ -142,20 +150,17 @@ struct Robot
 
             // Serial.println(error); Serial.print(" | "); Serial.println(errorD);
 
-            _leftMotor.setSpeed(speed + (kP * error) + (kD * errorD));
-            _rightMotor.setSpeed(speed - (kP * error) - (kD * errorD));
+            _leftMotor.setSpeed(speed + (kP * error) + (kI * totalError) + (kD * errorD));
+            _rightMotor.setSpeed(speed - (kP * error) - (kI * totalError) - (kD * errorD));
 
+            totalError += error;
             lastError = error;
 
             delete[] array;
 
             totalDelay += pidDelay;
             if (totalDelay % 500 == 0) {
-                if (SerialBT.available()) 
-                {
-                    String data = SerialBT.readString();
-                    Serial.println(data);
-                }
+                readBluetooth();
             }
             delay(pidDelay);
         }
@@ -163,9 +168,54 @@ struct Robot
         stop();
     }
 
+    void readBluetooth() {
+        if (SerialBT.available()) 
+        {
+            stop();
+            String data = SerialBT.readString();
+            Serial.println(data);
+            if (data == "PLAY")
+                player.play();
+            else if (data == "PAUSE") 
+                player.pause();
+            else if (data == "NEXT")
+                player.playNext();
+            else if (data == "LAST")
+                player.playLast();
+            else if (data == "FOOD") 
+            {
+                distributor.open();
+                delay(500);
+                distributor.close();
+            } 
+            else if (data.substring(0, 2) == "kP")
+            {
+                kP = (float)atof(data.substring(2, 7).c_str());
+            } else if (data.substring(0, 2) == "kI") {
+                // kI = (float)atof(data.substring(2, 7).c_str());
+            }
+            else if (data.substring(0, 2) == "kD") {
+                kD = (float)atof(data.substring(2, 7).c_str());
+            } else if (data.substring(0, 5) == "SPEED") {
+                speed = (float)atof(data.substring(5, 10).c_str());
+            } else if (data == "RESET_PID") {
+                defaultPID();
+            }
+        }
+    }
+    
+    void defaultPID() {
+        kP = 0.05;
+        kI = 0;
+        kD = 0.02;
+        speed = 0.15;
+    }
+
+
     void initParts() {
         _leftMotor.resetEncoder();
         _rightMotor.resetEncoder();
+        distributor.init();
     }
 
     void initSensors() {
